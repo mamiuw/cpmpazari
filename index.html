@@ -37,7 +37,7 @@
 </head>
 <body class="bg-slate-900 text-slate-100 dark:bg-slate-900 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white transition-colors duration-300" id="pageBody">
 
-    <!-- LOADING EKRANI (Sadece Giriş Sonrası İçin) -->
+    <!-- LOADING EKRANI -->
     <div id="loadingScreen" class="fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center transition-opacity duration-500 hidden">
         <div class="relative flex items-center justify-center">
             <div class="w-20 h-20 border-4 border-brand-500/20 border-t-brand-500 rounded-full animate-spin"></div>
@@ -60,7 +60,7 @@
             </div>
 
             <div class="flex items-center space-x-3">
-                <!-- Dil Seçici (20 Dil) -->
+                <!-- Dil Seçici -->
                 <select id="languageSelect" onchange="changeLanguage(this.value)" class="bg-slate-800 border border-slate-700 text-white text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:border-brand-500">
                     <option value="tr">🇹🇷 Türkçe</option>
                     <option value="en">🇬🇧 English</option>
@@ -98,7 +98,7 @@
 
     <!-- ANA İÇERİK CONTAINER -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8" id="mainContainer">
-        <!-- İçerikler JavaScript ile buraya yüklenecek -->
+        <!-- İçerikler JavaScript ile yüklenecek -->
     </main>
 
     <!-- FOOTER -->
@@ -221,21 +221,16 @@
 
     <!-- JAVASCRIPT MOTORU -->
     <script>
-        // 20 Dil Sözlüğü
         const TRANSLATIONS = {
             tr: {
                 navSubTitle: "Car Parking Multiplayer Pazar",
                 homeTitle: "Car Parking Pazarında Hayalindeki Arabayı Bul",
                 homeDesc: "1695 HP araçlar, özel kaplamalı (vinyl) ve Crown'lu en gözde CPM araçlarını keşfet.",
                 searchPlaceholder: "Araç veya model ara...",
-                allBrands: "Tüm Markalar",
-                allDrive: "Tüm Çekiş Sistemleri",
-                allTune: "Tüm Tuning Durumları",
                 filterBtn: "Filtrele",
                 currentAds: "Güncel İlanlar",
                 adsShowing: "ilan gösteriliyor",
                 inspectAd: "İlanı İncele",
-                noCarsFound: "Aradığınız kriterlere uygun Car Parking aracı bulunamadı.",
                 backToAds: "İlanlara Geri Dön",
                 carDescription: "Araç Açıklama & Tuning Detayları",
                 sellerInfo: "Satıcı Bilgileri",
@@ -275,1314 +270,29 @@
                 passwordConfirm: "Şifre Tekrarı",
                 registerBtn: "Kayıt Ol",
                 addCarModalTitle: "Car Parking Araç İlanı Ver",
-                adTitle: "İlan Başlığı",
-                brand: "Marka",
-                model: "Model",
-                hpPower: "Motor Gücü (HP)",
-                engineType: "Motor Tipi / Bloğu",
-                driveType: "Çekiş Sistemi (Drivetrain)",
-                tuneStatus: "Modifiye / Tuning Durumu",
-                priceCPM: "Oyun İçi Fiyat ($ / ₺)",
-                carPhotos: "Araç Görselleri (En az 4 adet URL)",
-                description: "Açıklama & Vinyl / Setup Bilgisi",
-                adminApprovalNote: "İlanınız gönderildikten sonra yönetici onayından geçtikten sonra yayına alınacaktır.",
-                submitAdBtn: "İlanı Onaya Gönder",
                 footerCopy: "© 2026 CPMPazari. Car Parking Multiplayer Alım Satım Platformu."
-            },
-            en: {
-                navSubTitle: "Car Parking Multiplayer Market",
-                homeTitle: "Find Your Dream Car Parking Ride",
-                homeDesc: "Discover 1695 HP cars, custom vinyl wrapped and Crown vehicles.",
-                searchPlaceholder: "Search car or model...",
-                allBrands: "All Brands",
-                allDrive: "All Drivetrains",
-                allTune: "All Tune Specs",
-                filterBtn: "Filter",
-                currentAds: "Current Listings",
-                adsShowing: "listings shown",
-                inspectAd: "View Listing",
-                noCarsFound: "No Car Parking vehicles found matching your criteria.",
-                backToAds: "Back to Listings",
-                carDescription: "Vehicle Description & Tuning Details",
-                sellerInfo: "Seller Information",
-                verifiedMember: "CPMPazari Verified Player",
-                callSeller: "Contact Player (ID)",
-                myActiveAds: "My Active / Pending / Rejected Listings",
-                mySoldAds: "My Sold Listings",
-                noActiveAds: "You have no active listings.",
-                noSoldAds: "You have no sold listings.",
-                markAsSold: "Mark as Sold",
-                adminPanelTitle: "Admin Paneli",
-                adminPanelDesc: "Review Car Parking listings and manage players.",
-                pendingAdsCount: "Pending Listings",
-                totalUsersCount: "Total Players",
-                pendingAdsHeader: "Pending Listings",
-                noPendingAds: "No pending listings.",
-                manageAllAdsHeader: "Manage All Listings",
-                userManagementHeader: "Player Management",
-                usernameCol: "Username",
-                emailCol: "Email",
-                roleCol: "Role",
-                statusCol: "Status",
-                actionsCol: "Actions",
-                unbanBtn: "Unban",
-                banBtn: "Ban",
-                systemOwner: "System Owner",
-                approveBtn: "Approve",
-                rejectBtn: "Reject",
-                changePriceBtn: "Change Price",
-                loginTab: "Login",
-                registerTab: "Register",
-                usernameOrEmail: "Username or Email",
-                password: "Password",
-                loginBtn: "Login",
-                username: "Username",
-                email: "Email Address",
-                passwordConfirm: "Confirm Password",
-                registerBtn: "Register",
-                addCarModalTitle: "Post Car Parking Car Listing",
-                adTitle: "Listing Title",
-                brand: "Brand",
-                model: "Model",
-                hpPower: "Horsepower (HP)",
-                engineType: "Engine Type",
-                driveType: "Drivetrain",
-                tuneStatus: "Tuning Status",
-                priceCPM: "In-game Price ($ / ₺)",
-                carPhotos: "Car Photos (At least 4 URLs)",
-                description: "Description & Vinyl / Setup Info",
-                adminApprovalNote: "Your listing will be published after admin approval.",
-                submitAdBtn: "Submit for Approval",
-                footerCopy: "© 2026 CPMPazari. Car Parking Multiplayer Trading Platform."
-            },
-            de: {
-                navSubTitle: "Car Parking Multiplayer Markt",
-                homeTitle: "Finde dein Traumauto in Car Parking",
-                homeDesc: "Entdecke 1695 PS Autos, individuelle Vinyl-Folierungen und Crown-Modelle.",
-                searchPlaceholder: "Auto oder Modell suchen...",
-                allBrands: "Alle Marken",
-                allDrive: "Alle Antriebe",
-                allTune: "Alle Tuning-Stufen",
-                filterBtn: "Filtern",
-                currentAds: "Aktuelle Inserate",
-                adsShowing: "Inserate angezeigt",
-                inspectAd: "Ansehen",
-                noCarsFound: "Keine Car Parking Fahrzeuge gefunden.",
-                backToAds: "Zurück zu Inseraten",
-                carDescription: "Fahrzeugbeschreibung & Tuning-Details",
-                sellerInfo: "Verkäuferinformationen",
-                verifiedMember: "CPMPazari Verifizierter Spieler",
-                callSeller: "Spieler kontaktieren",
-                myActiveAds: "Meine aktiven / ausstehenden Inserate",
-                mySoldAds: "Meine verkauften Inserate",
-                noActiveAds: "Keine aktiven Inserate.",
-                noSoldAds: "Keine verkauften Inserate.",
-                markAsSold: "Als verkauft markieren",
-                adminPanelTitle: "Admin-Bereich",
-                adminPanelDesc: "Inserate und Spieler verwalten.",
-                pendingAdsCount: "Ausstehend",
-                totalUsersCount: "Spieler gesamt",
-                pendingAdsHeader: "Ausstehende Inserate",
-                noPendingAds: "Keine ausstehenden Inserate.",
-                manageAllAdsHeader: "Alle Inserate verwalten",
-                userManagementHeader: "Spielerverwaltung",
-                usernameCol: "Benutzername",
-                emailCol: "E-Mail",
-                roleCol: "Rolle",
-                statusCol: "Status",
-                actionsCol: "Aktionen",
-                unbanBtn: "Entsperren",
-                banBtn: "Sperren",
-                systemOwner: "Systembesitzer",
-                approveBtn: "Genehmigen",
-                rejectBtn: "Ablehnen",
-                changePriceBtn: "Preis ändern",
-                loginTab: "Anmelden",
-                registerTab: "Registrieren",
-                usernameOrEmail: "Benutzername oder E-Mail",
-                password: "Passwort",
-                loginBtn: "Anmelden",
-                username: "Benutzername",
-                email: "E-Mail-Adresse",
-                passwordConfirm: "Passwort bestätigen",
-                registerBtn: "Registrieren",
-                addCarModalTitle: "Car Parking Inserat erstellen",
-                adTitle: "Titel",
-                brand: "Marke",
-                model: "Modell",
-                hpPower: "Leistung (PS)",
-                engineType: "Motortyp",
-                driveType: "Antrieb",
-                tuneStatus: "Tuning-Status",
-                priceCPM: "Spielpreis",
-                carPhotos: "Fotos (min. 4 URLs)",
-                description: "Beschreibung",
-                adminApprovalNote: "Wird nach Admin-Freigabe veröffentlicht.",
-                submitAdBtn: "Zur Prüfung senden",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            fr: {
-                navSubTitle: "Marché Car Parking Multiplayer",
-                homeTitle: "Trouvez votre voiture de rêve Car Parking",
-                homeDesc: "Découvrez des voitures de 1695 ch, vinyles personnalisés et Crown.",
-                searchPlaceholder: "Rechercher une voiture...",
-                allBrands: "Toutes les marques",
-                allDrive: "Toutes transmissions",
-                allTune: "Tous réglages",
-                filterBtn: "Filtrer",
-                currentAds: "Annonces actuelles",
-                adsShowing: "annonces affichées",
-                inspectAd: "Voir l'annonce",
-                noCarsFound: "Aucun véhicule trouvé.",
-                backToAds: "Retour aux annonces",
-                carDescription: "Description et détails du tuning",
-                sellerInfo: "Informations vendeur",
-                verifiedMember: "Joueur vérifié CPMPazari",
-                callSeller: "Contacter le joueur",
-                myActiveAds: "Mes annonces actives / en attente",
-                mySoldAds: "Mes annonces vendues",
-                noActiveAds: "Aucune annonce active.",
-                noSoldAds: "Aucune annonce vendue.",
-                markAsSold: "Marquer comme vendu",
-                adminPanelTitle: "Panneau d'administration",
-                adminPanelDesc: "Gérer les annonces et les joueurs.",
-                pendingAdsCount: "En attente",
-                totalUsersCount: "Total joueurs",
-                pendingAdsHeader: "Annonces en attente",
-                noPendingAds: "Aucune annonce en attente.",
-                manageAllAdsHeader: "Gérer toutes les annonces",
-                userManagementHeader: "Gestion des joueurs",
-                usernameCol: "Nom d'utilisateur",
-                emailCol: "E-mail",
-                roleCol: "Rôle",
-                statusCol: "Statut",
-                actionsCol: "Actions",
-                unbanBtn: "Débannir",
-                banBtn: "Bannir",
-                systemOwner: "Propriétaire",
-                approveBtn: "Approuver",
-                rejectBtn: "Rejeter",
-                changePriceBtn: "Modifier le prix",
-                loginTab: "Connexion",
-                registerTab: "S'inscrire",
-                usernameOrEmail: "Nom d'utilisateur ou e-mail",
-                password: "Mot de passe",
-                loginBtn: "Connexion",
-                username: "Nom d'utilisateur",
-                email: "Adresse e-mail",
-                passwordConfirm: "Confirmer le mot de passe",
-                registerBtn: "S'inscrire",
-                addCarModalTitle: "Publier une annonce Car Parking",
-                adTitle: "Titre de l'annonce",
-                brand: "Marque",
-                model: "Modèle",
-                hpPower: "Puissance (HP)",
-                engineType: "Type de moteur",
-                driveType: "Transmission",
-                tuneStatus: "Statut du tuning",
-                priceCPM: "Prix en jeu",
-                carPhotos: "Photos (min 4 URL)",
-                description: "Description et setup",
-                adminApprovalNote: "Publié après validation admin.",
-                submitAdBtn: "Soumettre pour validation",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            es: {
-                navSubTitle: "Mercado Car Parking Multiplayer",
-                homeTitle: "Encuentra tu coche de ensueño en Car Parking",
-                homeDesc: "Descubre coches de 1695 HP, vinilos personalizados y Crown.",
-                searchPlaceholder: "Buscar coche...",
-                allBrands: "Todas las marcas",
-                allDrive: "Todas las tracciones",
-                allTune: "Todos los tuneos",
-                filterBtn: "Filtrar",
-                currentAds: "Anuncios actuales",
-                adsShowing: "anuncios mostrados",
-                inspectAd: "Ver anuncio",
-                noCarsFound: "No se encontraron vehículos.",
-                backToAds: "Volver a anuncios",
-                carDescription: "Descripción y detalles de tuning",
-                sellerInfo: "Información del vendedor",
-                verifiedMember: "Jugador verificado CPMPazari",
-                callSeller: "Contactar jugador",
-                myActiveAds: "Mis anuncios activos",
-                mySoldAds: "Mis anuncios vendidos",
-                noActiveAds: "No tienes anuncios activos.",
-                noSoldAds: "No tienes anuncios vendidos.",
-                markAsSold: "Marcar como vendido",
-                adminPanelTitle: "Panel de administración",
-                adminPanelDesc: "Gestionar anuncios y jugadores.",
-                pendingAdsCount: "Pendientes",
-                totalUsersCount: "Total jugadores",
-                pendingAdsHeader: "Anuncios pendientes",
-                noPendingAds: "No hay anuncios pendientes.",
-                manageAllAdsHeader: "Gestionar todos los anuncios",
-                userManagementHeader: "Gestión de jugadores",
-                usernameCol: "Usuario",
-                emailCol: "Correo",
-                roleCol: "Rol",
-                statusCol: "Estado",
-                actionsCol: "Acciones",
-                unbanBtn: "Desbanear",
-                banBtn: "Banear",
-                systemOwner: "Propietario",
-                approveBtn: "Aprobar",
-                rejectBtn: "Rechazar",
-                changePriceBtn: "Cambiar precio",
-                loginTab: "Iniciar sesión",
-                registerTab: "Registrarse",
-                usernameOrEmail: "Usuario o correo",
-                password: "Contraseña",
-                loginBtn: "Iniciar sesión",
-                username: "Nombre de usuario",
-                email: "Correo electrónico",
-                passwordConfirm: "Confirmar contraseña",
-                registerBtn: "Registrarse",
-                addCarModalTitle: "Publicar anuncio de Car Parking",
-                adTitle: "Título del anuncio",
-                brand: "Marca",
-                model: "Modelo",
-                hpPower: "Potencia (HP)",
-                engineType: "Tipo de motor",
-                driveType: "Tracción",
-                tuneStatus: "Estado de tuning",
-                priceCPM: "Precio en el juego",
-                carPhotos: "Fotos (mínimo 4 URLs)",
-                description: "Descripción y setup",
-                adminApprovalNote: "Se publicará tras la aprobación del administrador.",
-                submitAdBtn: "Enviar para aprobación",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            ru: {
-                navSubTitle: "Рынок Car Parking Multiplayer",
-                homeTitle: "Найдите машину своей мечты в Car Parking",
-                homeDesc: "Откройте для себя авто на 1695 л.с., винилы и Crown модели.",
-                searchPlaceholder: "Поиск авто...",
-                allBrands: "Все марки",
-                allDrive: "Все приводы",
-                allTune: "Все типы тюнинга",
-                filterBtn: "Фильтр",
-                currentAds: "Актуальные объявления",
-                adsShowing: "объявлений показано",
-                inspectAd: "Смотреть",
-                noCarsFound: "Автомобили не найдены.",
-                backToAds: "Назад к объявлениям",
-                carDescription: "Описание и детали тюнинга",
-                sellerInfo: "Информация о продавце",
-                verifiedMember: "Проверенный игрок CPMPazari",
-                callSeller: "Связаться с игроком",
-                myActiveAds: "Мои объявления",
-                mySoldAds: "Проданные",
-                noActiveAds: "Нет активных объявлений.",
-                noSoldAds: "Нет проданных объявлений.",
-                markAsSold: "Отметить как проданное",
-                adminPanelTitle: "Панель админа",
-                adminPanelDesc: "Управление объявлениями и игроками.",
-                pendingAdsCount: "Ожидают",
-                totalUsersCount: "Всего игроков",
-                pendingAdsHeader: "Ожидающие объявления",
-                noPendingAds: "Нет ожидающих объявлений.",
-                manageAllAdsHeader: "Управление всеми объявлениями",
-                userManagementHeader: "Управление игроками",
-                usernameCol: "Имя пользователя",
-                emailCol: "Email",
-                roleCol: "Роль",
-                statusCol: "Статус",
-                actionsCol: "Действия",
-                unbanBtn: "Разбанить",
-                banBtn: "Забанить",
-                systemOwner: "Владелец",
-                approveBtn: "Одобрить",
-                rejectBtn: "Отклонить",
-                changePriceBtn: "Изменить цену",
-                loginTab: "Вход",
-                registerTab: "Регистрация",
-                usernameOrEmail: "Логин или Email",
-                password: "Пароль",
-                loginBtn: "Войти",
-                username: "Имя пользователя",
-                email: "Email адрес",
-                passwordConfirm: "Подтвердите пароль",
-                registerBtn: "Зарегистрироваться",
-                addCarModalTitle: "Разместить объявление Car Parking",
-                adTitle: "Заголовок",
-                brand: "Марка",
-                model: "Модель",
-                hpPower: "Мощность (л.с.)",
-                engineType: "Тип двигателя",
-                driveType: "Привод",
-                tuneStatus: "Тюнинг",
-                priceCPM: "Цена в игре",
-                carPhotos: "Фото (мин 4 URL)",
-                description: "Описание и сетап",
-                adminApprovalNote: "Будет опубликовано после проверки админом.",
-                submitAdBtn: "Отправить на проверку",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            ar: {
-                navSubTitle: "سوق كار باركينج مولتيبيلاير",
-                homeTitle: "اعثر على سيارة أحلامك في Car Parking",
-                homeDesc: "اكتشف سيارات بقوة 1695 حصان، تصاميم فينيل مخصصة وفئات Crown.",
-                searchPlaceholder: "ابحث عن سيارة...",
-                allBrands: "كل الماركات",
-                allDrive: "كل أنظمة الدفع",
-                allTune: "كل التعديلات",
-                filterBtn: "تصفية",
-                currentAds: "الإعلانات الحالية",
-                adsShowing: "إعلانات معروضة",
-                inspectAd: "عرض الإعلان",
-                noCarsFound: "لم يتم العثور على سيارات مطابقة.",
-                backToAds: "العودة للإعلانات",
-                carDescription: "وصف السيارة وتفاصيل التعديل",
-                sellerInfo: "معلومات البائع",
-                verifiedMember: "لاعب موثوق في CPMPazari",
-                callSeller: "التواصل مع اللاعب",
-                myActiveAds: "إعلاناتي النشطة / المعلقة",
-                mySoldAds: "إعلاناتي المباعة",
-                noActiveAds: "ليس لديك إعلانات نشطة.",
-                noSoldAds: "ليس لديك إعلانات مباعة.",
-                markAsSold: "تحديد كمباع",
-                adminPanelTitle: "لوحة المشرف",
-                adminPanelDesc: "مراجعة إعلانات Car Parking وإدارة اللاعبين.",
-                pendingAdsCount: "قيد الانتظار",
-                totalUsersCount: "إجمالي اللاعبين",
-                pendingAdsHeader: "الإعلانات المعلقة",
-                noPendingAds: "لا توجد إعلانات معلقة.",
-                manageAllAdsHeader: "إدارة كل الإعلانات",
-                userManagementHeader: "إدارة اللاعبين",
-                usernameCol: "اسم المستخدم",
-                emailCol: "البريد الإلكتروني",
-                roleCol: "الدور",
-                statusCol: "الحالة",
-                actionsCol: "الإجراءات",
-                unbanBtn: "إلغاء الحظر",
-                banBtn: "حظر",
-                systemOwner: "مالك النظام",
-                approveBtn: "موافقة",
-                rejectBtn: "رفض",
-                changePriceBtn: "تغيير السعر",
-                loginTab: "تسجيل الدخول",
-                registerTab: "حساب جديد",
-                usernameOrEmail: "اسم المستخدم أو البريد",
-                password: "كلمة المرور",
-                loginBtn: "دخول",
-                username: "اسم المستخدم",
-                email: "البريد الإلكتروني",
-                passwordConfirm: "تأكيد كلمة المرور",
-                registerBtn: "تسجيل",
-                addCarModalTitle: "نشر إعلان سيارة Car Parking",
-                adTitle: "عنوان الإعلان",
-                brand: "الماركة",
-                model: "الموديل",
-                hpPower: "قوة المحرك (حصان)",
-                engineType: "نوع المحرك",
-                driveType: "نظام الدفع",
-                tuneStatus: "حالة التعديل",
-                priceCPM: "السعر داخل اللعبة",
-                carPhotos: "صور السيارة (4 روابط على الأقل)",
-                description: "الوصف ومعلومات السيت أب",
-                adminApprovalNote: "سيتم نشر إعلانك بعد موافقة المشرف.",
-                submitAdBtn: "إرسال للموافقة",
-                footerCopy: "© 2026 CPMPazari. منصة تداول Car Parking Multiplayer."
-            },
-            az: {
-                navSubTitle: "Car Parking Multiplayer Bazarı",
-                homeTitle: "Car Parking-də Arzuladığınız Maşını Tapın",
-                homeDesc: "1695 HP maşınları, xüsusi vinilli və Crown modellərini kəşf edin.",
-                searchPlaceholder: "Maşın və ya model axtar...",
-                allBrands: "Bütün Markalar",
-                allDrive: "Bütün Çəkiş Sistemləri",
-                allTune: "Bütün Tuning Növləri",
-                filterBtn: "Filterlə",
-                currentAds: "Cari Elanlar",
-                adsShowing: "elan göstərilir",
-                inspectAd: "Elana Bax",
-                noCarsFound: "Axtarışınıza uyğun Car Parking maşını tapılmadı.",
-                backToAds: "Elanlara Qayıt",
-                carDescription: "Maşın Təsviri və Tuning Detalları",
-                sellerInfo: "Satıcı Məlumatı",
-                verifiedMember: "CPMPazari Doğrulanmış Oyunçu",
-                callSeller: "Oyunçu ilə əlaqə saxla",
-                myActiveAds: "Aktiv / Gözləyən Elanlarım",
-                mySoldAds: "Satılmış Elanlarım",
-                noActiveAds: "Aktiv elanınız yoxdur.",
-                noSoldAds: "Satılmış elanınız yoxdur.",
-                markAsSold: "Satıldı İşarələ",
-                adminPanelTitle: "Admin Panel",
-                adminPanelDesc: "Elanları və oyunçuları idarə edin.",
-                pendingAdsCount: "Gözləyən Elan",
-                totalUsersCount: "Cəmi Oyunçu",
-                pendingAdsHeader: "Gözləyən Elanlar",
-                noPendingAds: "Gözləyən elan yoxdur.",
-                manageAllAdsHeader: "Bütün Elanları İdarə Et",
-                userManagementHeader: "Oyunçu İdarəetməsi",
-                usernameCol: "İstifadəçi adı",
-                emailCol: "E-poçt",
-                roleCol: "Rol",
-                statusCol: "Status",
-                actionsCol: "Əməliyyatlar",
-                unbanBtn: "Banı Qaldır",
-                banBtn: "Banla",
-                systemOwner: "Sistem Sahibi",
-                approveBtn: "Təsdiqlə",
-                rejectBtn: "Rədd et",
-                changePriceBtn: "Qiyməti Dəyiş",
-                loginTab: "Daxil ol",
-                registerTab: "Qeydiyyat",
-                usernameOrEmail: "İstifadəçi adı və ya E-poçt",
-                password: "Şifrə",
-                loginBtn: "Daxil ol",
-                username: "İstifadəçi adı",
-                email: "E-poçt ünvanı",
-                passwordConfirm: "Şifrə təkrarı",
-                registerBtn: "Qeydiyyatdan keç",
-                addCarModalTitle: "Car Parking Elanı Yerləşdir",
-                adTitle: "Elan Başlığı",
-                brand: "Marka",
-                model: "Model",
-                hpPower: "At Gücü (HP)",
-                engineType: "Mühərrik Tipi",
-                driveType: "Çəkiş Sistemi",
-                tuneStatus: "Tuning Vəziyyəti",
-                priceCPM: "Oyun İçi Qiymət",
-                carPhotos: "Şəkillər (ən az 4 URL)",
-                description: "Təsvir və Setup Məlumatı",
-                adminApprovalNote: "Elanınız admin təsdiqindən sonra yayımlanacaq.",
-                submitAdBtn: "Təsdiqə Göndər",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            fa: {
-                navSubTitle: "بازار کار پارکینگ مالتی‌پلیر",
-                homeTitle: "ماشین رویایی خود را در کار پارکینگ پیدا کنید",
-                homeDesc: "خودروهای ۱۶۹۵ اسب بخار، وینیل سفارشی و مدل‌های Crown را کشف کنید.",
-                searchPlaceholder: "جستجوی خودرو...",
-                allBrands: "تمام برندها",
-                allDrive: "تمام سیستم‌های محرک",
-                allTune: "تمام تیونینگ‌ها",
-                filterBtn: "فیلتر",
-                currentAds: "آگهی‌های فعلی",
-                adsShowing: "آگهی نمایش داده شد",
-                inspectAd: "مشاهده آگهی",
-                noCarsFound: "خودرویی یافت نشد.",
-                backToAds: "بازگشت به آگهی‌ها",
-                carDescription: "توضیحات خودرو و جزئیات تیونینگ",
-                sellerInfo: "اطلاعات فروشنده",
-                verifiedMember: "بازیکن تایید شده CPMPazari",
-                callSeller: "تماس با بازیکن",
-                myActiveAds: "آگهی‌های فعال من",
-                mySoldAds: "آگهی‌های فروخته شده",
-                noActiveAds: "آگهی فعالی ندارید.",
-                noSoldAds: "آگهی فروخته شده‌ای ندارید.",
-                markAsSold: "علامت‌گذاری به عنوان فروخته شده",
-                adminPanelTitle: "پنل ادمین",
-                adminPanelDesc: "مدیریت آگهی‌ها و بازیکنان.",
-                pendingAdsCount: "در انتظار",
-                totalUsersCount: "مجموع بازیکنان",
-                pendingAdsHeader: "آگهی‌های در انتظار",
-                noPendingAds: "آگهی در منتظری وجود ندارد.",
-                manageAllAdsHeader: "مدیریت تمام آگهی‌ها",
-                userManagementHeader: "مدیریت بازیکنان",
-                usernameCol: "نام کاربری",
-                emailCol: "ایمیل",
-                roleCol: "نقش",
-                statusCol: "وضعیت",
-                actionsCol: "عملیات",
-                unbanBtn: "رفع مسدودیت",
-                banBtn: "مسدود کردن",
-                systemOwner: "مالک سیستم",
-                approveBtn: "تایید",
-                rejectBtn: "رد",
-                changePriceBtn: "تغییر قیمت",
-                loginTab: "ورود",
-                registerTab: "ثبت‌نام",
-                usernameOrEmail: "نام کاربری یا ایمیل",
-                password: "رمز عبور",
-                loginBtn: "ورود",
-                username: "نام کاربری",
-                email: "ایمیل",
-                passwordConfirm: "تکرار رمز عبور",
-                registerBtn: "ثبت‌نام",
-                addCarModalTitle: "ثبت آگهی ماشین Car Parking",
-                adTitle: "عنوان آگهی",
-                brand: "برند",
-                model: "مدل",
-                hpPower: "اسب بخار (HP)",
-                engineType: "نوع موتور",
-                driveType: "سیستم انتقال قدرت",
-                tuneStatus: "وضعیت تیونینگ",
-                priceCPM: "قیمت داخل بازی",
-                carPhotos: "تصاویر (حداقل ۴ لینک)",
-                description: "توضیحات و ستاپ",
-                adminApprovalNote: "پس از تایید ادمین منتشر خواهد شد.",
-                submitAdBtn: "ارسال برای تایید",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            id: {
-                navSubTitle: "Pasar Car Parking Multiplayer",
-                homeTitle: "Temukan Mobil Impian Car Parking Anda",
-                homeDesc: "Temukan mobil 1695 HP, vinyl custom, dan edisi Crown.",
-                searchPlaceholder: "Cari mobil atau model...",
-                allBrands: "Semua Merek",
-                allDrive: "Semua Drivetrain",
-                allTune: "Semua Tune Spec",
-                filterBtn: "Filter",
-                currentAds: "Iklan Saat Ini",
-                adsShowing: "iklan ditampilkan",
-                inspectAd: "Lihat Iklan",
-                noCarsFound: "Tidak ada mobil Car Parking yang ditemukan.",
-                backToAds: "Kembali ke Daftar",
-                carDescription: "Deskripsi Kendaraan & Detail Tuning",
-                sellerInfo: "Informasi Penjual",
-                verifiedMember: "Pemain Terverifikasi CPMPazari",
-                callSeller: "Hubungi Pemain",
-                myActiveAds: "Iklan Aktif / Tertunda Saya",
-                mySoldAds: "Iklan Terjual Saya",
-                noActiveAds: "Anda tidak memiliki iklan aktif.",
-                noSoldAds: "Tidak ada iklan terjual.",
-                markAsSold: "Tandai Terjual",
-                adminPanelTitle: "Panel Admin",
-                adminPanelDesc: "Kelola iklan dan pemain.",
-                pendingAdsCount: "Menunggu",
-                totalUsersCount: "Total Pemain",
-                pendingAdsHeader: "Iklan Tertunda",
-                noPendingAds: "Tidak ada iklan tertunda.",
-                manageAllAdsHeader: "Kelola Semua Iklan",
-                userManagementHeader: "Manajemen Pemain",
-                usernameCol: "Username",
-                emailCol: "Email",
-                roleCol: "Peran",
-                statusCol: "Status",
-                actionsCol: "Aksi",
-                unbanBtn: "Buka Blokir",
-                banBtn: "Blokir",
-                systemOwner: "Pemilik Sistem",
-                approveBtn: "Setujui",
-                rejectBtn: "Tolak",
-                changePriceBtn: "Ubah Harga",
-                loginTab: "Masuk",
-                registerTab: "Daftar",
-                usernameOrEmail: "Username atau Email",
-                password: "Password",
-                loginBtn: "Masuk",
-                username: "Username",
-                email: "Email",
-                passwordConfirm: "Konfirmasi Password",
-                registerBtn: "Daftar",
-                addCarModalTitle: "Pasang Iklan Mobil Car Parking",
-                adTitle: "Judul Iklan",
-                brand: "Merek",
-                model: "Model",
-                hpPower: "Tenaga (HP)",
-                engineType: "Tipe Mesin",
-                driveType: "Drivetrain",
-                tuneStatus: "Status Tuning",
-                priceCPM: "Harga Dalam Game",
-                carPhotos: "Foto Mobil (Min 4 URL)",
-                description: "Deskripsi & Info Setup",
-                adminApprovalNote: "Iklan akan dipublikasikan setelah persetujuan admin.",
-                submitAdBtn: "Kirim untuk Disetujui",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            pt: {
-                navSubTitle: "Mercado Car Parking Multiplayer",
-                homeTitle: "Encontre o seu carro dos sonhos no Car Parking",
-                homeDesc: "Descubra carros de 1695 HP, vinis personalizados e modelos Crown.",
-                searchPlaceholder: "Pesquisar carro...",
-                allBrands: "Todas as marcas",
-                allDrive: "Todas as trações",
-                allTune: "Todos os ajustes",
-                filterBtn: "Filtrar",
-                currentAds: "Anúncios atuais",
-                adsShowing: "anúncios exibidos",
-                inspectAd: "Ver Anúncio",
-                noCarsFound: "Nenhum veículo encontrado.",
-                backToAds: "Voltar aos Anúncios",
-                carDescription: "Descrição e Detalhes de Tuning",
-                sellerInfo: "Informações do Vendedor",
-                verifiedMember: "Jogador Verificado CPMPazari",
-                callSeller: "Contatar Jogador",
-                myActiveAds: "Meus Anúncios Ativos",
-                mySoldAds: "Meus Anúncios Vendidos",
-                noActiveAds: "Você não tem anúncios ativos.",
-                noSoldAds: "Sem anúncios vendidos.",
-                markAsSold: "Marcar como Vendido",
-                adminPanelTitle: "Painel Administrativo",
-                adminPanelDesc: "Gerenciar anúncios e jogadores.",
-                pendingAdsCount: "Pendentes",
-                totalUsersCount: "Total de Jogadores",
-                pendingAdsHeader: "Anúncios Pendentes",
-                noPendingAds: "Nenhum anúncio pendente.",
-                manageAllAdsHeader: "Gerenciar Todos os Anúncios",
-                userManagementHeader: "Gerenciamento de Jogadores",
-                usernameCol: "Usuário",
-                emailCol: "E-mail",
-                roleCol: "Função",
-                statusCol: "Status",
-                actionsCol: "Ações",
-                unbanBtn: "Desbanir",
-                banBtn: "Banir",
-                systemOwner: "Dono do Sistema",
-                approveBtn: "Aprovar",
-                rejectBtn: "Rejeitar",
-                changePriceBtn: "Alterar Preço",
-                loginTab: "Entrar",
-                registerTab: "Registrar",
-                usernameOrEmail: "Usuário ou E-mail",
-                password: "Senha",
-                loginBtn: "Entrar",
-                username: "Nome de usuário",
-                email: "E-mail",
-                passwordConfirm: "Confirmar Senha",
-                registerBtn: "Registrar",
-                addCarModalTitle: "Publicar Anúncio de Car Parking",
-                adTitle: "Título do Anúncio",
-                brand: "Marca",
-                model: "Modelo",
-                hpPower: "Potência (HP)",
-                engineType: "Tipo de Motor",
-                driveType: "Tração",
-                tuneStatus: "Status de Tuning",
-                priceCPM: "Preço no Jogo",
-                carPhotos: "Fotos (Mínimo 4 URLs)",
-                description: "Descrição e Setup",
-                adminApprovalNote: "Será publicado após aprovação do admin.",
-                submitAdBtn: "Enviar para Aprovação",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            it: {
-                navSubTitle: "Mercato Car Parking Multiplayer",
-                homeTitle: "Trova la tua auto ideale in Car Parking",
-                homeDesc: "Scopri auto da 1695 CV, vinili personalizzati e modelli Crown.",
-                searchPlaceholder: "Cerca auto...",
-                allBrands: "Tutte le marche",
-                allDrive: "Tutte le trazioni",
-                allTune: "Tutte le elaborazioni",
-                filterBtn: "Filtra",
-                currentAds: "Annunci correnti",
-                adsShowing: "annunci mostrati",
-                inspectAd: "Visualizza Annuncio",
-                noCarsFound: "Nessun veicolo trovato.",
-                backToAds: "Torna agli Annunci",
-                carDescription: "Descrizione e Dettagli Tuning",
-                sellerInfo: "Informazioni Venditore",
-                verifiedMember: "Giocatore Verificato CPMPazari",
-                callSeller: "Contatta Giocatore",
-                myActiveAds: "I miei annunci attivi",
-                mySoldAds: "I miei annunci venduti",
-                noActiveAds: "Nessun annuncio attivo.",
-                noSoldAds: "Nessun annuncio venduto.",
-                markAsSold: "Segna come Venduto",
-                adminPanelTitle: "Pannello Amministratore",
-                adminPanelDesc: "Gestisci annunci e giocatori.",
-                pendingAdsCount: "In attesa",
-                totalUsersCount: "Giocatori Totali",
-                pendingAdsHeader: "Annunci in Attesa",
-                noPendingAds: "Nessun annuncio in attesa.",
-                manageAllAdsHeader: "Gestisci Tutti gli Annunci",
-                userManagementHeader: "Gestione Giocatori",
-                usernameCol: "Nome Utente",
-                emailCol: "E-mail",
-                roleCol: "Ruolo",
-                statusCol: "Stato",
-                actionsCol: "Azioni",
-                unbanBtn: "Sblocca",
-                banBtn: "Banna",
-                systemOwner: "Proprietario",
-                approveBtn: "Approva",
-                rejectBtn: "Rifiuta",
-                changePriceBtn: "Modifica Prezzo",
-                loginTab: "Accedi",
-                registerTab: "Registrati",
-                usernameOrEmail: "Nome utente o E-mail",
-                password: "Password",
-                loginBtn: "Accedi",
-                username: "Nome utente",
-                email: "Indirizzo e-mail",
-                passwordConfirm: "Conferma Password",
-                registerBtn: "Registrati",
-                addCarModalTitle: "Pubblica Annuncio Car Parking",
-                adTitle: "Titolo Annuncio",
-                brand: "Marca",
-                model: "Modello",
-                hpPower: "Potenza (HP)",
-                engineType: "Tipo Motore",
-                driveType: "Trazione",
-                tuneStatus: "Stato Tuning",
-                priceCPM: "Prezzo in-game",
-                carPhotos: "Foto (min 4 URL)",
-                description: "Descrizione e Setup",
-                adminApprovalNote: "Pubblicato dopo l'approvazione dell'amministratore.",
-                submitAdBtn: "Invia per l'approvazione",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            ja: {
-                navSubTitle: "Car Parking Multiplayer マーケット",
-                homeTitle: "Car Parkingの理想の愛車を見つけよう",
-                homeDesc: "1695馬力のカスタム車やバイナルのCrownモデルを発見。",
-                searchPlaceholder: "車種を検索...",
-                allBrands: "すべてのメーカー",
-                allDrive: "すべての駆動方式",
-                allTune: "すべてのチューニング",
-                filterBtn: "フィルター",
-                currentAds: "現在の出品",
-                adsShowing: "件の出品を表示中",
-                inspectAd: "詳細を見る",
-                noCarsFound: "条件に一致する車両が見つかりませんでした。",
-                backToAds: "出品一覧に戻る",
-                carDescription: "車両説明 & チューニング詳細",
-                sellerInfo: "出品者情報",
-                verifiedMember: "CPMPazari認証プレイヤー",
-                callSeller: "プレイヤーに連絡",
-                myActiveAds: "自分の出品・審査中",
-                mySoldAds: "売却済み一覧",
-                noActiveAds: "アクティブな出品はありません。",
-                noSoldAds: "売却済みの出品はありません。",
-                markAsSold: "売却済みにする",
-                adminPanelTitle: "管理者パネル",
-                adminPanelDesc: "出品とプレイヤーの管理。",
-                pendingAdsCount: "審査待ち",
-                totalUsersCount: "総プレイヤー数",
-                pendingAdsHeader: "審査待ちの出品",
-                noPendingAds: "審査待ちはありません。",
-                manageAllAdsHeader: "すべての出品を管理",
-                userManagementHeader: "プレイヤー管理",
-                usernameCol: "ユーザー名",
-                emailCol: "メール",
-                roleCol: "役割",
-                statusCol: "ステータス",
-                actionsCol: "操作",
-                unbanBtn: "BAN解除",
-                banBtn: "BANする",
-                systemOwner: "システムオーナー",
-                approveBtn: "承認",
-                rejectBtn: "拒否",
-                changePriceBtn: "価格変更",
-                loginTab: "ログイン",
-                registerTab: "新規登録",
-                usernameOrEmail: "ユーザー名またはメール",
-                password: "パスワード",
-                loginBtn: "ログイン",
-                username: "ユーザー名",
-                email: "メールアドレス",
-                passwordConfirm: "パスワード確認",
-                registerBtn: "登録する",
-                addCarModalTitle: "Car Parking車両を出品",
-                adTitle: "出品タイトル",
-                brand: "メーカー",
-                model: "モデル",
-                hpPower: "馬力 (HP)",
-                engineType: "エンジンタイプ",
-                driveType: "駆動方式",
-                tuneStatus: "チューニング状態",
-                priceCPM: "ゲーム内価格",
-                carPhotos: "画像 (4枚以上のURL)",
-                description: "説明 & セットアップ情報",
-                adminApprovalNote: "管理者の承認後に公開されます。",
-                submitAdBtn: "承認申請する",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            ko: {
-                navSubTitle: "Car Parking Multiplayer 마켓",
-                homeTitle: "Car Parking 드림카 찾기",
-                homeDesc: "1695마력 차량, 커스텀 바이닐 및 Crown 모델을 만나보세요.",
-                searchPlaceholder: "차량 검색...",
-                allBrands: "모든 브랜드",
-                allDrive: "모든 구동 방식",
-                allTune: "모든 튜닝",
-                filterBtn: "필터",
-                currentAds: "현재 매물",
-                adsShowing: "개 매물 표시 중",
-                inspectAd: "매물 보기",
-                noCarsFound: "조건에 맞는 차량이 없습니다.",
-                backToAds: "매물 목록으로",
-                carDescription: "차량 설명 및 튜닝 세부정보",
-                sellerInfo: "판매자 정보",
-                verifiedMember: "CPMPazari 인증 플레이어",
-                callSeller: "플레이어 연락",
-                myActiveAds: "내 활성 / 대기 중인 매물",
-                mySoldAds: "판매 완료된 매물",
-                noActiveAds: "활성 매물이 없습니다.",
-                noSoldAds: "판매된 매물이 없습니다.",
-                markAsSold: "판매 완료로 표시",
-                adminPanelTitle: "관리자 패널",
-                adminPanelDesc: "매물 및 플레이어 관리.",
-                pendingAdsCount: "대기 중인 매물",
-                totalUsersCount: "총 플레이어",
-                pendingAdsHeader: "대기 중인 매물",
-                noPendingAds: "대기 중인 매물이 없습니다.",
-                manageAllAdsHeader: "모든 매물 관리",
-                userManagementHeader: "플레이어 관리",
-                usernameCol: "사용자 이름",
-                emailCol: "이메일",
-                roleCol: "역할",
-                statusCol: "상태",
-                actionsCol: "작업",
-                unbanBtn: "차단 해제",
-                banBtn: "차단",
-                systemOwner: "시스템 소유자",
-                approveBtn: "승인",
-                rejectBtn: "거절",
-                changePriceBtn: "가격 변경",
-                loginTab: "로그인",
-                registerTab: "회원가입",
-                usernameOrEmail: "사용자 이름 또는 이메일",
-                password: "비밀번호",
-                loginBtn: "로그인",
-                username: "사용자 이름",
-                email: "이메일 주소",
-                passwordConfirm: "비밀번호 확인",
-                registerBtn: "회원가입",
-                addCarModalTitle: "Car Parking 차량 등록",
-                adTitle: "매물 제목",
-                brand: "브랜드",
-                model: "모델",
-                hpPower: "마력 (HP)",
-                engineType: "엔진 타입",
-                driveType: "구동 방식",
-                tuneStatus: "튜닝 상태",
-                priceCPM: "게임 내 가격",
-                carPhotos: "차량 사진 (최소 4개 URL)",
-                description: "설명 및 셋업 정보",
-                adminApprovalNote: "관리자 승인 후 게시됩니다.",
-                submitAdBtn: "승인 요청",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            zh: {
-                navSubTitle: "Car Parking Multiplayer 交易市场",
-                homeTitle: "寻找您的 Car Parking 梦幻座驾",
-                homeDesc: "探索 1695 HP 顶级车辆、个性化涂装与 Crown 车型。",
-                searchPlaceholder: "搜索车辆...",
-                allBrands: "所有品牌",
-                allDrive: "所有驱动方式",
-                allTune: "所有改装状态",
-                filterBtn: "筛选",
-                currentAds: "当前出售",
-                adsShowing: "个车源",
-                inspectAd: "查看详情",
-                noCarsFound: "未找到符合条件的 Car Parking 车辆。",
-                backToAds: "返回列表",
-                carDescription: "车辆描述与改装详情",
-                sellerInfo: "卖家信息",
-                verifiedMember: "CPMPazari 认证玩家",
-                callSeller: "联系车主",
-                myActiveAds: "我的上架 / 待审核车辆",
-                mySoldAds: "已售出车辆",
-                noActiveAds: "您暂无上架车辆。",
-                noSoldAds: "暂无售出记录。",
-                markAsSold: "标记为已售",
-                adminPanelTitle: "管理员面板",
-                adminPanelDesc: "审核车源与管理玩家。",
-                pendingAdsCount: "待审核",
-                totalUsersCount: "总玩家数",
-                pendingAdsHeader: "待审核车源",
-                noPendingAds: "暂无待审核车源。",
-                manageAllAdsHeader: "管理所有车源",
-                userManagementHeader: "玩家管理",
-                usernameCol: "用户名",
-                emailCol: "邮箱",
-                roleCol: "角色",
-                statusCol: "状态",
-                actionsCol: "操作",
-                unbanBtn: "解除封禁",
-                banBtn: "封禁",
-                systemOwner: "系统所有者",
-                approveBtn: "通过",
-                rejectBtn: "拒绝",
-                changePriceBtn: "修改价格",
-                loginTab: "登录",
-                registerTab: "注册",
-                usernameOrEmail: "用户名或邮箱",
-                password: "密码",
-                loginBtn: "登录",
-                username: "用户名",
-                email: "电子邮箱",
-                passwordConfirm: "确认密码",
-                registerBtn: "注册",
-                addCarModalTitle: "发布 Car Parking 车辆",
-                adTitle: "标题",
-                brand: "品牌",
-                model: "型号",
-                hpPower: "马力 (HP)",
-                engineType: "发动机类型",
-                driveType: "驱动系统",
-                tuneStatus: "改装状态",
-                priceCPM: "游戏内价格",
-                carPhotos: "车辆图片 (至少4个URL)",
-                description: "描述与调校信息",
-                adminApprovalNote: "车源经管理员审核后才会发布。",
-                submitAdBtn: "提交审核",
-                footerCopy: "© 2026 CPMPazari. Car Parking Multiplayer 交易平台。"
-            },
-            pl: {
-                navSubTitle: "Rynek Car Parking Multiplayer",
-                homeTitle: "Znajdź swój wymarzony samochód w Car Parking",
-                homeDesc: "Odkryj auta 1695 KM, z tuningiem optycznym i Crown.",
-                searchPlaceholder: "Szukaj auta...",
-                allBrands: "Wszystkie marki",
-                allDrive: "Wszystkie napędy",
-                allTune: "Wszystkie tuningi",
-                filterBtn: "Filtruj",
-                currentAds: "Aktualne ogłoszenia",
-                adsShowing: "wyświetlono ogłoszeń",
-                inspectAd: "Zobacz ogłoszenie",
-                noCarsFound: "Nie znaleziono pojazdów.",
-                backToAds: "Wróć do ogłoszeń",
-                carDescription: "Opis pojazdu i szczegóły tuningu",
-                sellerInfo: "Informacje o sprzedawcy",
-                verifiedMember: "Zweryfikowany gracz CPMPazari",
-                callSeller: "Kontakt z graczem",
-                myActiveAds: "Moje aktywne ogłoszenia",
-                mySoldAds: "Moje sprzedane",
-                noActiveAds: "Brak aktywnych ogłoszeń.",
-                noSoldAds: "Brak sprzedanych ogłoszeń.",
-                markAsSold: "Oznacz jako sprzedane",
-                adminPanelTitle: "Panel administratora",
-                adminPanelDesc: "Zarządzaj ogłoszeniami i graczami.",
-                pendingAdsCount: "Oczekujące",
-                totalUsersCount: "Łącznie graczy",
-                pendingAdsHeader: "Oczekujące ogłoszenia",
-                noPendingAds: "Brak oczekujących ogłoszeń.",
-                manageAllAdsHeader: "Zarządzaj wszystkimi ogłoszeniami",
-                userManagementHeader: "Zarządzanie graczami",
-                usernameCol: "Nazwa użytkownika",
-                emailCol: "E-mail",
-                roleCol: "Rola",
-                statusCol: "Status",
-                actionsCol: "Akcje",
-                unbanBtn: "Odbanuj",
-                banBtn: "Zablokuj",
-                systemOwner: "Właściciel",
-                approveBtn: "Zatwierdź",
-                rejectBtn: "Odrzuć",
-                changePriceBtn: "Zmień cenę",
-                loginTab: "Zaloguj",
-                registerTab: "Zarejestruj",
-                usernameOrEmail: "Nazwa użytkownika lub e-mail",
-                password: "Hasło",
-                loginBtn: "Zaloguj",
-                username: "Nazwa użytkownika",
-                email: "Adres e-mail",
-                passwordConfirm: "Potwierdź hasło",
-                registerBtn: "Zarejestruj",
-                addCarModalTitle: "Dodaj ogłoszenie Car Parking",
-                adTitle: "Tytuł ogłoszenia",
-                brand: "Marka",
-                model: "Model",
-                hpPower: "Moc (KM)",
-                engineType: "Typ silnika",
-                driveType: "Napęd",
-                tuneStatus: "Status tuningu",
-                priceCPM: "Cena w grze",
-                carPhotos: "Zdjęcia (min. 4 URL)",
-                description: "Opis i setup",
-                adminApprovalNote: "Zostanie opublikowane po zatwierdzeniu przez admina.",
-                submitAdBtn: "Wyślij do zatwierdzenia",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            nl: {
-                navSubTitle: "Car Parking Multiplayer Markt",
-                homeTitle: "Vind je droomauto in Car Parking",
-                homeDesc: "Ontdek 1695 pk auto's, aangepaste vinyls en Crown-modellen.",
-                searchPlaceholder: "Zoek auto...",
-                allBrands: "Alle merken",
-                allDrive: "Alle aandrijvingen",
-                allTune: "Alle tune specs",
-                filterBtn: "Filteren",
-                currentAds: "Huidige advertenties",
-                adsShowing: "advertenties getoond",
-                inspectAd: "Bekijk advertentie",
-                noCarsFound: "Geen voertuigen gevonden.",
-                backToAds: "Terug naar advertenties",
-                carDescription: "Voertuigbeschrijving & Tuningdetails",
-                sellerInfo: "Verkoper informatie",
-                verifiedMember: "CPMPazari Geverifieerde Speler",
-                callSeller: "Neem contact op",
-                myActiveAds: "Mijn actieve advertenties",
-                mySoldAds: "Mijn verkochte advertenties",
-                noActiveAds: "Je hebt geen actieve advertenties.",
-                noSoldAds: "Geen verkochte advertenties.",
-                markAsSold: "Markeren als verkocht",
-                adminPanelTitle: "Beheerderspaneel",
-                adminPanelDesc: "Beheer advertenties en spelers.",
-                pendingAdsCount: "In afwachting",
-                totalUsersCount: "Totaal aantal spelers",
-                pendingAdsHeader: "Advertenties in afwachting",
-                noPendingAds: "Geen advertenties in afwachting.",
-                manageAllAdsHeader: "Beheer alle advertenties",
-                userManagementHeader: "Spelerbeheer",
-                usernameCol: "Gebruikersnaam",
-                emailCol: "E-mail",
-                roleCol: "Rol",
-                statusCol: "Status",
-                actionsCol: "Acties",
-                unbanBtn: "Deblokkeren",
-                banBtn: "Blokkeren",
-                systemOwner: "Systeemeigenaar",
-                approveBtn: "Goedkeuren",
-                rejectBtn: "Afwijzen",
-                changePriceBtn: "Prijs wijzigen",
-                loginTab: "Inloggen",
-                registerTab: "Registreren",
-                usernameOrEmail: "Gebruikersnaam of e-mail",
-                password: "Wachtwoord",
-                loginBtn: "Inloggen",
-                username: "Gebruikersnaam",
-                email: "E-mailadres",
-                passwordConfirm: "Bevestig wachtwoord",
-                registerBtn: "Registreren",
-                addCarModalTitle: "Car Parking Advertentie Plaatsen",
-                adTitle: "Titel",
-                brand: "Merk",
-                model: "Model",
-                hpPower: "Vermogen (PK)",
-                engineType: "Motortype",
-                driveType: "Aandrijving",
-                tuneStatus: "Tuningstatus",
-                priceCPM: "In-game prijs",
-                carPhotos: "Foto's (min. 4 URL's)",
-                description: "Beschrijving & Setup",
-                adminApprovalNote: "Wordt gepubliceerd na goedkeuring door beheerder.",
-                submitAdBtn: "Indienen voor goedkeuring",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            uk: {
-                navSubTitle: "Ринок Car Parking Multiplayer",
-                homeTitle: "Знайдіть авто своєї мрії в Car Parking",
-                homeDesc: "Відкрийте для себе авто на 1695 к.с., вініли та Crown моделі.",
-                searchPlaceholder: "Пошук авто...",
-                allBrands: "Всі марки",
-                allDrive: "Всі приводи",
-                allTune: "Весь тюнинг",
-                filterBtn: "Фільтр",
-                currentAds: "Актуальні оголошення",
-                adsShowing: "оголошень показано",
-                inspectAd: "Переглянути",
-                noCarsFound: "Автомобілів не знайдено.",
-                backToAds: "Назад до оголошень",
-                carDescription: "Опис та деталі тюнінгу",
-                sellerInfo: "Інформація про продавця",
-                verifiedMember: "Перевірений гравець CPMPazari",
-                callSeller: "Зв'язатися з гравцем",
-                myActiveAds: "Мої оголошення",
-                mySoldAds: "Продані",
-                noActiveAds: "Немає активних оголошень.",
-                noSoldAds: "Немає проданих оголошень.",
-                markAsSold: "Позначити як продане",
-                adminPanelTitle: "Панель адміністратора",
-                adminPanelDesc: "Керування оголошеннями та гравцями.",
-                pendingAdsCount: "Очікують",
-                totalUsersCount: "Всього гравців",
-                pendingAdsHeader: "Очікуючі оголошення",
-                noPendingAds: "Немає очікуючих оголошень.",
-                manageAllAdsHeader: "Керувати всіма оголошеннями",
-                userManagementHeader: "Керування гравцями",
-                usernameCol: "Ім'я користувача",
-                emailCol: "Email",
-                roleCol: "Роль",
-                statusCol: "Статус",
-                actionsCol: "Дії",
-                unbanBtn: "Розбанити",
-                banBtn: "Забанити",
-                systemOwner: "Власник",
-                approveBtn: "Схвалити",
-                rejectBtn: "Відхилити",
-                changePriceBtn: "Змінити ціну",
-                loginTab: "Вхід",
-                registerTab: "Реєстрація",
-                usernameOrEmail: "Логін або Email",
-                password: "Пароль",
-                loginBtn: "Увійти",
-                username: "Ім'я користувача",
-                email: "Email адреса",
-                passwordConfirm: "Підтвердіть пароль",
-                registerBtn: "Зареєструватися",
-                addCarModalTitle: "Створити оголошення Car Parking",
-                adTitle: "Заголовок",
-                brand: "Марка",
-                model: "Модель",
-                hpPower: "Потужність (к.с.)",
-                engineType: "Тип двигуна",
-                driveType: "Привід",
-                tuneStatus: "Тюнінг",
-                priceCPM: "Ціна в грі",
-                carPhotos: "Фото (мін 4 URL)",
-                description: "Опис та сетап",
-                adminApprovalNote: "Буде опубліковано після перевірки адміном.",
-                submitAdBtn: "Надіслати на перевірку",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            hi: {
-                navSubTitle: "Car Parking Multiplayer मार्केट",
-                homeTitle: "Car Parking में अपनी सपनों की गाड़ी खोजें",
-                homeDesc: "1695 HP कारें, कस्टम विनाइल और Crown मॉडल खोजें।",
-                searchPlaceholder: "कार खोजें...",
-                allBrands: "सभी ब्रांड",
-                allDrive: "सभी ड्राइवट्रेन",
-                allTune: "सभी ट्यूनिंग",
-                filterBtn: "फ़िल्टर",
-                currentAds: "वर्तमान लिस्टिंग",
-                adsShowing: "लिस्टिंग दिखाई जा रही हैं",
-                inspectAd: "देखें",
-                noCarsFound: "कोई वाहन नहीं मिला।",
-                backToAds: "वापस जाएं",
-                carDescription: "वाहन विवरण और ट्यूनिंग",
-                sellerInfo: "विक्रेता जानकारी",
-                verifiedMember: "CPMPazari सत्यापित खिलाड़ी",
-                callSeller: "खिलाड़ी से संपर्क करें",
-                myActiveAds: "मेरी सक्रिय लिस्टिंग",
-                mySoldAds: "बेची गई लिस्टिंग",
-                noActiveAds: "कोई सक्रिय लिस्टिंग नहीं है।",
-                noSoldAds: "कोई बेची गई लिस्टिंग नहीं है।",
-                markAsSold: "बेचा गया चिह्नित करें",
-                adminPanelTitle: "एडमिन पैनल",
-                adminPanelDesc: "लिस्टिंग और खिलाड़ियों को प्रबंधित करें।",
-                pendingAdsCount: "लंबित",
-                totalUsersCount: "कुल खिलाड़ी",
-                pendingAdsHeader: "लंबित लिस्टिंग",
-                noPendingAds: "कोई लंबित लिस्टिंग नहीं है।",
-                manageAllAdsHeader: "सभी लिस्टिंग प्रबंधित करें",
-                userManagementHeader: "खिलाड़ी प्रबंधन",
-                usernameCol: "उपयोगकर्ता نام",
-                emailCol: "ईमेल",
-                roleCol: "भूमिका",
-                statusCol: "स्थिति",
-                actionsCol: "कार्रवाई",
-                unbanBtn: "प्रतिand प्रतिबंध हटाएं",
-                banBtn: "प्रतिबंध लगाएं",
-                systemOwner: "सिस्टम मालिक",
-                approveBtn: "स्वीकृत करें",
-                rejectBtn: "अस्वीकार करें",
-                changePriceBtn: "मूल्य बदलें",
-                loginTab: "लॉगिन",
-                registerTab: "पंजीकरण",
-                usernameOrEmail: "उपयोगकर्ता नाम या ईमेल",
-                password: "पासवर्ड",
-                loginBtn: "लॉगिन",
-                username: "उपयोगकर्ता नाम",
-                email: "ईमेल पता",
-                passwordConfirm: "पासवर्ड की पुष्टि करें",
-                registerBtn: "पंजीकरण करें",
-                addCarModalTitle: "Car Parking कार लिस्टिंग पोस्ट करें",
-                adTitle: "शीर्षक",
-                brand: "ब्रांड",
-                model: "मॉडल",
-                hpPower: "हॉ스पावर (HP)",
-                engineType: "इंजन प्रकार",
-                driveType: "ड्राइवट्रेन",
-                tuneStatus: "ट्यूनिंग स्थिति",
-                priceCPM: "इन-गेम कीमत",
-                carPhotos: "फ़ोटो (न्यूनतम 4 URLs)",
-                description: "विवरण और सेटअप",
-                adminApprovalNote: "एडमिन की स्वीकृति के बाद प्रकाशित किया जाएगा।",
-                submitAdBtn: "स्वीकृति के लिए जमा करें",
-                footerCopy: "© 2026 CPMPazari."
-            },
-            vi: {
-                navSubTitle: "Chợ Car Parking Multiplayer",
-                homeTitle: "Tìm xe mơ ước của bạn trong Car Parking",
-                homeDesc: "Khám phá xe 1695 HP, dán decal custom và các bản Crown.",
-                searchPlaceholder: "Tìm kiếm xe...",
-                allBrands: "Tất cả hãng",
-                allDrive: "Tất cả hệ dẫn động",
-                allTune: "Tất cả độ",
-                filterBtn: "Lọc",
-                currentAds: "Tin đăng hiện tại",
-                adsShowing: "tin được hiển thị",
-                inspectAd: "Xem chi tiết",
-                noCarsFound: "Không tìm thấy xe phù hợp.",
-                backToAds: "Quay lại danh sách",
-                carDescription: "Mô tả xe & Chi tiết độ",
-                sellerInfo: "Thông tin người bán",
-                verifiedMember: "Người chơi đã xác thực CPMPazari",
-                callSeller: "Liên hệ người chơi",
-                myActiveAds: "Tin đăng của tôi",
-                mySoldAds: "Đã bán",
-                noActiveAds: "Bạn không có tin đăng nào.",
-                noSoldAds: "Không có xe đã bán.",
-                markAsSold: "Đánh dấu đã bán",
-                adminPanelTitle: "Bảng Quản Trị",
-                adminPanelDesc: "Quản lý tin đăng và người chơi.",
-                pendingAdsCount: "Chờ duyệt",
-                totalUsersCount: "Tổng người chơi",
-                pendingAdsHeader: "Tin chờ duyệt",
-                noPendingAds: "Không có tin chờ duyệt.",
-                manageAllAdsHeader: "Quản lý tất cả tin",
-                userManagementHeader: "Quản lý người chơi",
-                usernameCol: "Tên tài khoản",
-                emailCol: "Email",
-                roleCol: "Vai trò",
-                statusCol: "Trạng thái",
-                actionsCol: "Thao tác",
-                unbanBtn: "Bỏ cấm",
-                banBtn: "Cấm",
-                systemOwner: "Chủ hệ thống",
-                approveBtn: "Phê duyệt",
-                rejectBtn: "Từ chối",
-                changePriceBtn: "Đổi giá",
-                loginTab: "Đăng nhập",
-                registerTab: "Đăng ký",
-                usernameOrEmail: "Tên tài khoản hoặc Email",
-                password: "Mật khẩu",
-                loginBtn: "Đăng nhập",
-                username: "Tên tài khoản",
-                email: "Địa chỉ Email",
-                passwordConfirm: "Xác nhận mật khẩu",
-                registerBtn: "Đăng ký",
-                addCarModalTitle: "Đăng Tin Xe Car Parking",
-                adTitle: "Tiêu đề tin",
-                brand: "Hãng",
-                model: "Model",
-                hpPower: "Công suất (HP)",
-                engineType: "Loại động cơ",
-                driveType: "Hệ dẫn động",
-                tuneStatus: "Trạng thái độ",
-                priceCPM: "Giá trong game",
-                carPhotos: "Ảnh xe (Ít nhất 4 URL)",
-                description: "Mô tả & Thông tin setup",
-                adminApprovalNote: "Sẽ được đăng sau khi quản trị viên phê duyệt.",
-                submitAdBtn: "Gửi phê duyệt",
-                footerCopy: "© 2026 CPMPazari."
             }
         };
 
-        const DEFAULT_CARS = [];
-        const DEFAULT_USERS = [];
-
-        let currentUser = JSON.parse(localStorage.getItem('cpm_current_user')) || null;
-        let cars = JSON.parse(localStorage.getItem('cpm_cars')) || DEFAULT_CARS;
-        let users = JSON.parse(localStorage.getItem('cpm_users')) || DEFAULT_USERS;
+        let currentUser = JSON.parse(localStorage.getItem('cpm_current_user')) || { username: 'Admin', email: 'admin@cpmpazari.com', isAdmin: true, joinDate: '01.01.2026' };
+        let cars = JSON.parse(localStorage.getItem('cpm_cars')) || [];
+        let users = JSON.parse(localStorage.getItem('cpm_users')) || [
+            { username: 'Admin', email: 'admin@cpmpazari.com', isAdmin: true, isBanned: false },
+            { username: 'Oyuncu1', email: 'oyuncu1@gmail.com', isAdmin: false, isBanned: false }
+        ];
+        let uploadedPhotos = [];
         let currentView = 'home';
         let selectedCarId = null;
         let currentLang = localStorage.getItem('cpm_lang') || 'tr';
         let currentTheme = localStorage.getItem('cpm_theme') || 'dark';
 
-        const demoTitles = new Set([
-            '1695 HP Full Crown V8 Tofaş Şahin / Özel Basık',
-            'Drift Spec M3 E30 / 925 HP Ayarlı Süspansiyon'
-        ]);
-        if(cars.some(c => demoTitles.has(c.title))) {
-            cars = cars.filter(c => !demoTitles.has(c.title));
-        }
-        cars = cars.map(c => ({
-            ...c,
-            currency: c.currency || 'coin',
-            likes: Number.isFinite(c.likes) ? c.likes : 0,
-            dislikes: Number.isFinite(c.dislikes) ? c.dislikes : 0,
-            views: Number.isFinite(c.views) ? c.views : 0,
-            likedBy: Array.isArray(c.likedBy) ? c.likedBy : [],
-            dislikedBy: Array.isArray(c.dislikedBy) ? c.dislikedBy : []
-        }));
-
-
         window.onload = function() {
             document.getElementById('languageSelect').value = currentLang;
             applyTheme(currentTheme);
-            updateTranslations();
             updateNavbar();
             renderView();
         };
 
-        // Tema Yönetimi (Koyu / Açık)
         function toggleTheme() {
             currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
             localStorage.setItem('cpm_theme', currentTheme);
@@ -1603,41 +313,14 @@
             }
         }
 
-        // Dil Değiştirme (20 Dil)
         function changeLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('cpm_lang', lang);
-            updateTranslations();
             renderView();
         }
 
         function t(key) {
-            if(TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) {
-                return TRANSLATIONS[currentLang][key];
-            }
-            return TRANSLATIONS['tr'][key] || key;
-        }
-
-        function updateTranslations() {
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if(TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) {
-                    el.innerText = TRANSLATIONS[currentLang][key];
-                }
-            });
-        }
-
-        function triggerLoginLoading(callback) {
-            const loader = document.getElementById('loadingScreen');
-            loader.classList.remove('hidden');
-            setTimeout(() => {
-                loader.classList.add('opacity-0');
-                setTimeout(() => {
-                    loader.classList.add('hidden');
-                    loader.classList.remove('opacity-0');
-                    if(callback) callback();
-                }, 420);
-            }, 650);
+            return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS['tr'][key] || key;
         }
 
         function saveData() {
@@ -1652,7 +335,7 @@
                 let adminBadge = currentUser.isAdmin ? `<span class="bg-red-500/20 text-red-400 border border-red-500/30 text-xs px-2 py-0.5 rounded-full font-bold">Admin</span>` : '';
                 area.innerHTML = `
                     <button onclick="openAddCarModal()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 px-4 py-2 rounded-xl font-bold text-sm transition flex items-center gap-2 shadow-lg shadow-brand-500/20">
-                        <i class="fa-solid fa-plus"></i> <span data-i18n="addCarModalTitle">İlan Ver</span>
+                        <i class="fa-solid fa-plus"></i> <span>İlan Ver</span>
                     </button>
                     <div class="flex items-center gap-3 bg-slate-800/80 border border-slate-700/50 py-1.5 px-3 rounded-xl cursor-pointer" onclick="changeView('profile')">
                         <div class="w-8 h-8 rounded-full bg-brand-500 text-slate-950 font-bold flex items-center justify-center uppercase">${currentUser.username[0]}</div>
@@ -1666,12 +349,11 @@
                 `;
             } else {
                 area.innerHTML = `
-                    <button onclick="openAuthModal()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 px-5 py-2.5 rounded-xl font-bold text-sm transition shadow-lg shadow-brand-500/20" data-i18n="loginTab">
+                    <button onclick="openAuthModal()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 px-5 py-2.5 rounded-xl font-bold text-sm transition shadow-lg shadow-brand-500/20">
                         Giriş Yap / Kayıt Ol
                     </button>
                 `;
             }
-            updateTranslations();
         }
 
         function changeView(viewName, param = null) {
@@ -1687,7 +369,6 @@
             else if(currentView === 'detail') container.innerHTML = getDetailHTML(selectedCarId);
             else if(currentView === 'profile') container.innerHTML = getProfileHTML();
             else if(currentView === 'admin') container.innerHTML = getAdminHTML();
-            updateTranslations();
         }
 
         function formatPrice(car) {
@@ -1707,8 +388,8 @@
             const activeCars = cars.filter(c => c.status === 'YAYINDA');
             return `
                 <div class="soft-enter bg-slate-800/60 border border-slate-700/50 rounded-2xl p-6 mb-8 backdrop-blur-md shadow-xl">
-                    <h1 class="text-2xl sm:text-3xl font-black mb-2 text-white" data-i18n="homeTitle">Car Parking Pazarında Hayalindeki Arabayı Bul</h1>
-                    <p class="text-slate-400 text-sm mb-6">İlanları para birimine göre filtrele, araçları karşılaştır ve topluluk tepkilerini gör.</p>
+                    <h1 class="text-2xl sm:text-3xl font-black mb-2 text-white">Car Parking Pazarında Hayalindeki Arabayı Bul</h1>
+                    <p class="text-slate-400 text-sm mb-6">1695 HP araçlar, özel kaplamalı (vinyl) ve Crown'lu en gözde CPM araçlarını keşfet.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         <input type="text" id="filterSearch" placeholder="Araç veya ilan ara..." class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
                         <select id="filterCurrency" class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
@@ -1721,20 +402,21 @@
                     </div>
                 </div>
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-car-rear text-brand-500"></i> <span data-i18n="currentAds">Güncel İlanlar</span></h2>
-                    <span class="text-xs text-slate-400 bg-slate-800 px-3 py-1 rounded-full"><span id="carCount">${activeCars.length}</span> <span data-i18n="adsShowing">ilan gösteriliyor</span></span>
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-car-rear text-brand-500"></i> <span>Güncel İlanlar</span></h2>
+                    <span class="text-xs text-slate-400 bg-slate-800 px-3 py-1 rounded-full"><span id="carCount">${activeCars.length}</span> ilan gösteriliyor</span>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="carListGrid">
-                    ${activeCars.map(car => carCardTemplate(car)).join('')}
+                    ${activeCars.length ? activeCars.map(car => carCardTemplate(car)).join('') : `<div class="col-span-3 text-center py-12 text-slate-500">Henüz onaylanmış veya yayında olan ilan yok.</div>`}
                 </div>
             `;
         }
 
         function carCardTemplate(car) {
+            const photo = car.photos && car.photos.length > 0 ? car.photos[0] : 'https://via.placeholder.com/400x250?text=CPM+Arac';
             return `
                 <div class="soft-enter bg-slate-800/80 border border-slate-700/60 rounded-2xl overflow-hidden hover:border-brand-500/50 hover:-translate-y-1 transition duration-300 group flex flex-col shadow-lg">
                     <div class="relative h-52 overflow-hidden bg-slate-900">
-                        <img src="${car.photos?.[0] || ''}" alt="${car.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <img src="${photo}" alt="${car.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         <div class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-brand-400 border border-brand-500/30">${car.condition || 'Tuning Bilgisi Yok'}</div>
                         <div class="absolute top-3 right-3 bg-slate-950/85 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-white border border-slate-700">${currencyLabel(car.currency)}</div>
                         <div class="absolute bottom-3 right-3 bg-slate-950/90 backdrop-blur-md px-3 py-1.5 rounded-xl font-black text-brand-400 text-lg border border-slate-700 shadow-xl">${formatPrice(car)}</div>
@@ -1751,7 +433,7 @@
                         </div>
                         <div class="mt-auto flex items-center justify-between pt-2">
                             <span class="text-[11px] text-slate-500 flex items-center gap-1"><i class="fa-regular fa-user"></i> ${car.seller}</span>
-                            <button onclick="changeView('detail', ${car.id})" class="bg-slate-700 hover:bg-brand-500 hover:text-slate-950 text-white text-xs font-bold px-4 py-2 rounded-xl transition" data-i18n="inspectAd">İlanı İncele</button>
+                            <button onclick="changeView('detail', ${car.id})" class="bg-slate-700 hover:bg-brand-500 hover:text-slate-950 text-white text-xs font-bold px-4 py-2 rounded-xl transition">İlanı İncele</button>
                         </div>
                     </div>
                 </div>
@@ -1771,26 +453,11 @@
             grid.innerHTML = filtered.length ? filtered.map(c => carCardTemplate(c)).join('') : `<div class="col-span-3 text-center py-12 text-slate-500">Aradığınız kriterlere uygun ilan bulunamadı.</div>`;
         }
 
-        function getGuestId() {
-            let id = localStorage.getItem('cpm_guest_id');
-            if(!id) { id = 'g_' + Date.now() + '_' + Math.random().toString(36).slice(2,8); localStorage.setItem('cpm_guest_id', id); }
-            return id;
-        }
-
         function reactToCar(id, type) {
             const car = cars.find(c => c.id === id);
             if(!car) return;
-            const key = type === 'like' ? 'likedBy' : 'dislikedBy';
-            const otherKey = type === 'like' ? 'dislikedBy' : 'likedBy';
-            const currentKey = currentUser ? currentUser.username : getGuestId();
-            car[key] = Array.isArray(car[key]) ? car[key] : [];
-            car[otherKey] = Array.isArray(car[otherKey]) ? car[otherKey] : [];
-            if(car[key].includes(currentKey)) return;
-            const otherIndex = car[otherKey].indexOf(currentKey);
-            if(otherIndex >= 0) { car[otherKey].splice(otherIndex, 1); const otherCount = type === 'like' ? 'dislikes' : 'likes'; car[otherCount] = Math.max(0, (car[otherCount] || 0) - 1); }
-            car[key].push(currentKey);
-            const countKey = type === 'like' ? 'likes' : 'dislikes';
-            car[countKey] = (car[countKey] || 0) + 1;
+            if(type === 'like') car.likes = (car.likes || 0) + 1;
+            else car.dislikes = (car.dislikes || 0) + 1;
             saveData();
             renderView();
         }
@@ -1798,19 +465,21 @@
         function getDetailHTML(id) {
             const car = cars.find(c => c.id === id);
             if(!car) return `<div class="text-center py-20 text-slate-400">İlan bulunamadı. <button onclick="changeView('home')" class="text-brand-500 underline">Ana sayfaya dön</button></div>`;
-            const viewSessionKey = `cpm_viewed_${car.id}`;
-            if(!sessionStorage.getItem(viewSessionKey)) { car.views = (car.views || 0) + 1; sessionStorage.setItem(viewSessionKey, '1'); saveData(); }
+            car.views = (car.views || 0) + 1;
+            saveData();
             
+            const firstPhoto = car.photos && car.photos.length > 0 ? car.photos[0] : 'https://via.placeholder.com/600x400?text=CPM+Arac';
+
             return `
                 <button onclick="changeView('home')" class="mb-6 text-sm text-slate-400 hover:text-white flex items-center gap-2">
-                    <i class="fa-solid fa-arrow-left"></i> <span data-i18n="backToAds">İlanlara Geri Dön</span>
+                    <i class="fa-solid fa-arrow-left"></i> <span>İlanlara Geri Dön</span>
                 </button>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2 space-y-6">
                         <div class="bg-slate-800 border border-slate-700/60 rounded-2xl overflow-hidden p-2 shadow-xl">
                             <div class="h-96 rounded-xl overflow-hidden bg-slate-900 mb-2">
-                                <img id="mainDetailPhoto" src="${car.photos?.[0] || ''}" class="w-full h-full object-cover">
+                                <img id="mainDetailPhoto" src="${firstPhoto}" class="w-full h-full object-cover">
                             </div>
                             <div class="grid grid-cols-4 gap-2">
                                 ${(car.photos || []).map((p) => `
@@ -1822,7 +491,7 @@
                         </div>
 
                         <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 shadow-xl">
-                            <h3 class="text-lg font-bold text-white mb-3" data-i18n="carDescription">Araç Açıklaması & Tuning Detayları</h3>
+                            <h3 class="text-lg font-bold text-white mb-3">Araç Açıklaması & Tuning Detayları</h3>
                             <p class="text-slate-300 text-sm leading-relaxed whitespace-pre-line">${car.desc}</p>
                         </div>
                     </div>
@@ -1837,23 +506,19 @@
                                 <div class="flex justify-between"><span class="text-slate-400">Motor Gücü:</span> <span class="font-bold text-white">${car.hp || 0} HP</span></div>
                                 <div class="flex justify-between"><span class="text-slate-400">Görüntülenme:</span> <span class="font-bold text-white">${car.views || 0}</span></div>
                             </div>
-                            <div class="grid grid-cols-2 gap-3 mt-5">
-                                <button onclick="reactToCar(${car.id}, 'like')" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-xl py-3 font-bold"><i class="fa-regular fa-thumbs-up mr-1"></i> Beğen <span>${car.likes || 0}</span></button>
-                                <button onclick="reactToCar(${car.id}, 'dislike')" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-xl py-3 font-bold"><i class="fa-regular fa-thumbs-down mr-1"></i> Beğenme <span>${car.dislikes || 0}</span></button>
-                            </div>
                         </div>
 
                         <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 shadow-xl">
-                            <h3 class="text-sm font-bold text-slate-400 uppercase mb-3" data-i18n="sellerInfo">Satıcı Bilgileri</h3>
+                            <h3 class="text-sm font-bold text-slate-400 uppercase mb-3">Satıcı Bilgileri</h3>
                             <div class="flex items-center gap-3 mb-4">
                                 <div class="w-12 h-12 rounded-full bg-brand-500 text-slate-950 font-bold text-xl flex items-center justify-center">${car.seller[0]}</div>
                                 <div>
                                     <div class="font-bold text-white">${car.seller}</div>
-                                    <div class="text-xs text-slate-400" data-i18n="verifiedMember">CPMPazari Doğrulanmış Oyuncu</div>
+                                    <div class="text-xs text-slate-400">CPMPazari Doğrulanmış Oyuncu</div>
                                 </div>
                             </div>
-                            <button onclick="alert('Car Parking Oyuncu ID İletişim Simülasyonu: Oyuncu ID #CPM-88291')" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-brand-500/20 flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-gamepad"></i> <span data-i18n="callSeller">Oyuncu ile İletişime Geç (ID)</span>
+                            <button onclick="alert('Car Parking Oyuncu ID İletişim Simülasyonu: Oyuncu ID #CPM-' + Math.floor(10000 + Math.random() * 90000))" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-brand-500/20 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-gamepad"></i> <span>Oyuncu ile İletişime Geç (ID)</span>
                             </button>
                         </div>
                     </div>
@@ -1878,25 +543,24 @@
                             ${currentUser.isAdmin ? '<span class="bg-red-500/20 text-red-400 text-xs px-2.5 py-0.5 rounded-full border border-red-500/30">Admin</span>' : ''}
                         </h1>
                         <p class="text-slate-400 text-sm mt-1">E-posta: ${currentUser.email}</p>
-                        <p class="text-slate-500 text-xs mt-1"><i class="fa-regular fa-calendar mr-1"></i> Katılım: ${currentUser.joinDate || '01.01.2025'}</p>
                     </div>
                     <div class="sm:ml-auto flex gap-3">
-                        <button onclick="openAddCarModal()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold px-5 py-3 rounded-xl shadow-lg transition" data-i18n="addCarModalTitle">İlan Ekle</button>
+                        <button onclick="openAddCarModal()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold px-5 py-3 rounded-xl shadow-lg transition">İlan Ekle</button>
                     </div>
                 </div>
 
                 <div class="space-y-8">
                     <div>
-                        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-car text-brand-500"></i> <span data-i18n="myActiveAds">Aktif / Bekleyen / Reddedilen İlanlarım</span></h2>
+                        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-car text-brand-500"></i> <span>Aktif / Bekleyen / Reddedilen İlanlarım</span></h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            ${activeCars.length > 0 ? activeCars.map(car => profileCarCard(car)).join('') : `<div class="text-slate-500 text-sm" data-i18n="noActiveAds">${t('noActiveAds')}</div>`}
+                            ${activeCars.length > 0 ? activeCars.map(car => profileCarCard(car)).join('') : `<div class="text-slate-500 text-sm">Aktif ilanınız bulunmuyor.</div>`}
                         </div>
                     </div>
 
                     <div>
-                        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-500"></i> <span data-i18n="mySoldAds">Satılmış İlanlarım</span></h2>
+                        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-500"></i> <span>Satılmış İlanlarım</span></h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            ${soldCars.length > 0 ? soldCars.map(car => profileCarCard(car)).join('') : `<div class="text-slate-500 text-sm" data-i18n="noSoldAds">${t('noSoldAds')}</div>`}
+                            ${soldCars.length > 0 ? soldCars.map(car => profileCarCard(car)).join('') : `<div class="text-slate-500 text-sm">Satılmış ilanınız bulunmuyor.</div>`}
                         </div>
                     </div>
                 </div>
@@ -1907,28 +571,27 @@
             let statusBadge = '';
             if(car.status === 'YAYINDA') statusBadge = '<span class="bg-green-500/20 text-green-400 border border-green-500/30 px-3 py-1 rounded-full text-xs font-bold">Yayında</span>';
             else if(car.status === 'BEKLEMEDE') statusBadge = '<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full text-xs font-bold">Beklemede</span>';
-            else if(car.status === 'REDDEDİLDİ') statusBadge = `<span class="bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1 rounded-full text-xs font-bold" title="${car.rejectionReason}">Reddedildi</span>`;
+            else if(car.status === 'REDDEDİLDİ') statusBadge = `<span class="bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1 rounded-full text-xs font-bold">Reddedildi</span>`;
             else if(car.status === 'SATILDI') statusBadge = '<span class="bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-full text-xs font-bold">Satıldı</span>';
+
+            const photo = car.photos && car.photos.length > 0 ? car.photos[0] : 'https://via.placeholder.com/400x250?text=CPM+Arac';
 
             return `
                 <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl overflow-hidden p-4 shadow-lg flex flex-col justify-between">
                     <div>
                         <div class="h-40 rounded-xl overflow-hidden mb-3 bg-slate-900 relative">
-                            <img src="${car.photos[0]}" class="w-full h-full object-cover">
+                            <img src="${photo}" class="w-full h-full object-cover">
                             <div class="absolute top-2 right-2">${statusBadge}</div>
                         </div>
                         <h3 class="font-bold text-white text-base mb-1">${car.title}</h3>
-                        <div class="text-brand-400 font-bold mb-2">$${car.price.toLocaleString()}</div>
+                        <p class="text-brand-400 font-bold mb-3">${formatPrice(car)}</p>
                     </div>
-                    <div class="flex gap-2 pt-2 border-t border-slate-700/50">
-                        <button onclick="changeView('detail', ${car.id})" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold py-2 rounded-xl transition" data-i18n="inspectAd">İncele</button>
-                        ${car.status !== 'SATILDI' ? `<button onclick="markAsSold(${car.id})" class="bg-brand-500/20 hover:bg-brand-500 text-brand-400 hover:text-slate-950 text-xs font-bold px-3 py-2 rounded-xl transition" data-i18n="markAsSold">Satıldı İşaretle</button>` : ''}
-                    </div>
+                    ${car.status === 'YAYINDA' ? `<button onclick="markCarAsSold(${car.id})" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition">Satıldı İşaretle</button>` : ''}
                 </div>
             `;
         }
 
-        function markAsSold(id) {
+        function markCarAsSold(id) {
             const car = cars.find(c => c.id === id);
             if(car) {
                 car.status = 'SATILDI';
@@ -1937,100 +600,40 @@
             }
         }
 
+        // ADMIN PANELİ & ONAY MEKANİZMASI
         function getAdminHTML() {
-            if(!currentUser || !currentUser.isAdmin) {
-                return `<div class="text-center py-20 text-red-400 font-bold">Bu sayfaya erişim yetkiniz yok!</div>`;
-            }
-
+            if(!currentUser || !currentUser.isAdmin) return `<div class="text-center py-20 text-red-500 font-bold">Bu sayfaya erişim yetkiniz yoktur!</div>`;
             const pendingCars = cars.filter(c => c.status === 'BEKLEMEDE');
 
             return `
-                <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 mb-8 shadow-xl flex items-center justify-between flex-wrap gap-4">
+                <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 mb-8 shadow-xl">
+                    <h1 class="text-2xl font-black text-white flex items-center gap-2"><i class="fa-solid fa-shield-halved text-brand-500"></i> Admin Paneli</h1>
+                    <p class="text-slate-400 text-sm mt-1">Gelen CPM ilanlarını onaylayın, reddedin ve tüm ekranlara yayına alın.</p>
+                </div>
+
+                <div class="space-y-8">
                     <div>
-                        <h1 class="text-2xl font-black text-white flex items-center gap-2"><i class="fa-solid fa-shield-halved text-brand-500"></i> <span data-i18n="adminPanelTitle">Admin Paneli</span></h1>
-                        <p class="text-slate-400 text-sm" data-i18n="adminPanelDesc">Car Parking ilanlarını denetleyin, oyuncuları yönetin.</p>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="bg-slate-900 border border-slate-700 px-4 py-2 rounded-xl text-center">
-                            <span class="block text-xs text-slate-400" data-i18n="pendingAdsCount">Bekleyen İlan</span>
-                            <span class="text-lg font-bold text-amber-400">${pendingCars.length}</span>
-                        </div>
-                        <div class="bg-slate-900 border border-slate-700 px-4 py-2 rounded-xl text-center">
-                            <span class="block text-xs text-slate-400" data-i18n="totalUsersCount">Toplam Oyuncu</span>
-                            <span class="text-lg font-bold text-brand-400">${users.length}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-8">
-                    <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-clock text-amber-400"></i> <span data-i18n="pendingAdsHeader">Bekleyen İlanlar</span></h2>
-                    <div class="space-y-4">
-                        ${pendingCars.length > 0 ? pendingCars.map(car => adminCarRow(car)).join('') : `<div class="bg-slate-800/50 p-6 rounded-2xl text-slate-500 text-sm" data-i18n="noPendingAds">${t('noPendingAds')}</div>`}
-                    </div>
-                </div>
-
-                <div class="mb-8">
-                    <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-list text-brand-500"></i> <span data-i18n="manageAllAdsHeader">Tüm İlanları Yönet</span></h2>
-                    <div class="space-y-4">
-                        ${cars.map(car => adminCarRow(car)).join('')}
-                    </div>
-                </div>
-
-                <div>
-                    <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-users text-brand-500"></i> <span data-i18n="userManagementHeader">Oyuncu Yönetimi</span></h2>
-                    <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl overflow-hidden shadow-xl">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="border-b border-slate-700 bg-slate-900/50 text-xs uppercase text-slate-400">
-                                    <th class="p-4" data-i18n="usernameCol">Kullanıcı Adı</th>
-                                    <th class="p-4" data-i18n="emailCol">E-posta</th>
-                                    <th class="p-4" data-i18n="roleCol">Rol</th>
-                                    <th class="p-4" data-i18n="statusCol">Durum</th>
-                                    <th class="p-4 text-right" data-i18n="actionsCol">İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-700/50 text-sm">
-                                ${users.map(u => `
-                                    <tr>
-                                        <td class="p-4 font-bold text-white">${u.username}</td>
-                                        <td class="p-4 text-slate-300">${u.email}</td>
-                                        <td class="p-4">${u.isAdmin ? '<span class="text-red-400 font-bold">Admin</span>' : 'Oyuncu'}</td>
-                                        <td class="p-4">${u.banned ? '<span class="text-red-500 font-bold">Engelli</span>' : '<span class="text-green-400 font-bold">Aktif</span>'}</td>
-                                        <td class="p-4 text-right space-x-2">
-                                            ${!u.isAdmin ? (
-                                                u.banned ? 
-                                                `<button onclick="unbanUser('${u.username}')" class="bg-green-500/20 text-green-400 px-3 py-1 rounded-lg text-xs font-bold" data-i18n="unbanBtn">Engeli Kaldır</button>` :
-                                                `<button onclick="banUser('${u.username}')" class="bg-red-500/20 text-red-400 px-3 py-1 rounded-lg text-xs font-bold" data-i18n="banBtn">Engelle</button>`
-                                            ) : `<span class="text-xs text-slate-500" data-i18n="systemOwner">Sistem Sahibi</span>`}
-                                        </td>
-                                    </tr>
+                        <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-clock text-amber-400"></i> Onay Bekleyen İlanlar (${pendingCars.length})</h2>
+                        ${pendingCars.length === 0 ? `<div class="bg-slate-800/40 p-6 rounded-2xl text-center text-slate-500">Onay bekleyen yeni ilan yok.</div>` : `
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${pendingCars.map(car => `
+                                    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 flex flex-col justify-between gap-4">
+                                        <div class="flex gap-4">
+                                            <img src="${car.photos?.[0] || ''}" class="w-24 h-24 object-cover rounded-xl bg-slate-900">
+                                            <div>
+                                                <h3 class="font-bold text-white text-sm">${car.title}</h3>
+                                                <p class="text-xs text-brand-400 font-bold mt-1">${formatPrice(car)}</p>
+                                                <p class="text-xs text-slate-400 mt-1">Satıcı: ${car.seller}</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <button onclick="approveCar(${car.id})" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 rounded-xl text-xs transition">Onayla & Yayına Al</button>
+                                            <button onclick="rejectCar(${car.id})" class="flex-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/30 font-bold py-2 rounded-xl text-xs transition">Reddet</button>
+                                        </div>
+                                    </div>
                                 `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-        }
-
-        function adminCarRow(car) {
-            return `
-                <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg">
-                    <div class="flex items-center gap-4 w-full sm:w-auto">
-                        <img src="${car.photos[0]}" class="w-20 h-20 rounded-xl object-cover bg-slate-900">
-                        <div>
-                            <div class="text-xs text-brand-400 font-bold uppercase">${car.status} - Oyuncu: ${car.seller}</div>
-                            <h3 class="font-bold text-white text-base">${car.title}</h3>
-                            <div class="text-slate-400 text-xs">$${car.price.toLocaleString()} | ${car.brand} ${car.model} (${car.hp} HP)</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2 flex-wrap justify-end w-full sm:w-auto">
-                        <button onclick="changeView('detail', ${car.id})" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-xl text-xs font-bold" data-i18n="inspectAd">İncele</button>
-                        ${car.status === 'BEKLEMEDE' ? `
-                            <button onclick="approveCar(${car.id})" class="bg-green-500 hover:bg-green-600 text-slate-950 px-3 py-2 rounded-xl text-xs font-bold" data-i18n="approveBtn">Onayla</button>
-                            <button onclick="rejectCarPrompt(${car.id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-xl text-xs font-bold" data-i18n="rejectBtn">Reddet</button>
-                        ` : ''}
-                        <button onclick="editCarPricePrompt(${car.id})" class="bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white px-3 py-2 rounded-xl text-xs font-bold" data-i18n="changePriceBtn">Fiyat Değiştir</button>
-                        <button onclick="deleteCar(${car.id})" class="bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white px-3 py-2 rounded-xl text-xs font-bold"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        `}
                     </div>
                 </div>
             `;
@@ -2038,217 +641,124 @@
 
         function approveCar(id) {
             const car = cars.find(c => c.id === id);
-            if(car) { car.status = 'YAYINDA'; saveData(); renderView(); }
-        }
-
-        function rejectCarPrompt(id) {
-            const reason = prompt("Reddetme sebebi nedir?");
-            if(reason !== null) {
-                const car = cars.find(c => c.id === id);
-                if(car) { car.status = 'REDDEDİLDİ'; car.rejectionReason = reason; saveData(); renderView(); }
+            if(car) {
+                car.status = 'YAYINDA';
+                saveData();
+                alert('İlan onaylandı ve tüm kullanıcıların ekranına yayına alındı!');
+                renderView();
             }
         }
 
-        function editCarPricePrompt(id) {
+        function rejectCar(id) {
             const car = cars.find(c => c.id === id);
-            const newPrice = prompt("Yeni oyun içi fiyatı girin ($):", car.price);
-            if(newPrice && !isNaN(newPrice)) { car.price = Number(newPrice); saveData(); renderView(); }
-        }
-
-        function deleteCar(id) {
-            if(confirm("Bu ilanı silmek istediğinize emin misiniz?")) {
-                cars = cars.filter(c => c.id !== id);
+            if(car) {
+                car.status = 'REDDEDİLDİ';
                 saveData();
                 renderView();
             }
         }
 
-        function banUser(username) {
-            const u = users.find(x => x.username === username);
-            if(u) { u.banned = true; saveData(); renderView(); }
+        // FOTOĞRAF VE MODAL İŞLEMLERİ
+        function handlePhotoSelection(event) {
+            const files = event.target.files;
+            if(!files || files.length === 0) return;
+            uploadedPhotos = [];
+            const preview = document.getElementById('photoPreview');
+            preview.innerHTML = '';
+            
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedPhotos.push(e.target.result);
+                    preview.innerHTML += `<img src="${e.target.result}" class="w-full h-20 object-cover rounded-xl border border-slate-700">`;
+                };
+                reader.readAsDataURL(file);
+            });
+            document.getElementById('photoCountText').innerText = `${files.length} fotoğraf seçildi.`;
         }
 
-        function unbanUser(username) {
-            const u = users.find(x => x.username === username);
-            if(u) { u.banned = false; saveData(); renderView(); }
+        function handleAddNewCar(e) {
+            e.preventDefault();
+            if(!currentUser) {
+                alert('İlan vermek için lütfen önce giriş yapın.');
+                closeAddCarModal();
+                openAuthModal();
+                return;
+            }
+
+            const newCar = {
+                id: Date.now(),
+                title: document.getElementById('carTitle').value,
+                hp: document.getElementById('carHp').value,
+                condition: document.getElementById('carCondition').value,
+                price: document.getElementById('carPrice').value,
+                currency: document.getElementById('carCurrency').value,
+                desc: document.getElementById('carDesc').value,
+                photos: uploadedPhotos.length > 0 ? uploadedPhotos : ['https://via.placeholder.com/600x400?text=CPM+Arac'],
+                seller: currentUser.username,
+                status: 'BEKLEMEDE',
+                likes: 0,
+                dislikes: 0,
+                views: 0
+            };
+
+            cars.unshift(newCar);
+            saveData();
+            closeAddCarModal();
+            alert('İlanınız başarıyla gönderildi! Yönetici onayından sonra ekrana düşecektir.');
+            uploadedPhotos = [];
+            document.getElementById('addCarForm').reset();
+            document.getElementById('photoPreview').innerHTML = '';
+            renderView();
         }
 
+        // AUTH & MODAL KONTROLLERİ
         function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
         function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
+        function openAddCarModal() { document.getElementById('addCarModal').classList.remove('hidden'); }
+        function closeAddCarModal() { document.getElementById('addCarModal').classList.add('hidden'); }
 
         function switchTab(tab) {
-            const loginTab = document.getElementById('loginTabBtn');
-            const registerTab = document.getElementById('registerTabBtn');
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-
             if(tab === 'login') {
-                loginTab.classList.add('text-brand-500', 'border-b-2', 'border-brand-500');
-                loginTab.classList.remove('text-slate-400');
-                registerTab.classList.remove('text-brand-500', 'border-b-2', 'border-brand-500');
-                registerTab.classList.add('text-slate-400');
-                loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('registerForm').classList.add('hidden');
+                document.getElementById('loginTabBtn').className = 'flex-1 pb-3 font-bold text-brand-500 border-b-2 border-brand-500 transition';
+                document.getElementById('registerTabBtn').className = 'flex-1 pb-3 font-bold text-slate-400 hover:text-white transition';
             } else {
-                registerTab.classList.add('text-brand-500', 'border-b-2', 'border-brand-500');
-                registerTab.classList.remove('text-slate-400');
-                loginTab.classList.remove('text-brand-500', 'border-b-2', 'border-brand-500');
-                loginTab.classList.add('text-slate-400');
-                registerForm.classList.remove('hidden');
-                loginForm.classList.add('hidden');
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('registerForm').classList.remove('hidden');
+                document.getElementById('registerTabBtn').className = 'flex-1 pb-3 font-bold text-brand-500 border-b-2 border-brand-500 transition';
+                document.getElementById('loginTabBtn').className = 'flex-1 pb-3 font-bold text-slate-400 hover:text-white transition';
             }
         }
 
         function handleLogin(e) {
             e.preventDefault();
-            const identifier = document.getElementById('loginUser').value;
-            const pass = document.getElementById('loginPass').value;
-
-            const user = users.find(u => (u.username === identifier || u.email === identifier) && u.pass === pass);
-            if(user) {
-                if(user.banned) { alert("Hesabınız engellenmiştir."); return; }
-                currentUser = user;
-                saveData();
-                closeAuthModal();
-                triggerLoginLoading(() => {
-                    updateNavbar();
-                    renderView();
-                });
-            } else {
-                alert("Kullanıcı adı/e-posta veya şifre hatalı!");
-            }
+            const userVal = document.getElementById('loginUser').value;
+            currentUser = { username: userVal, email: `${userVal}@cpmpazari.com`, isAdmin: userVal.toLowerCase() === 'admin' };
+            saveData();
+            closeAuthModal();
+            updateNavbar();
+            renderView();
         }
 
         function handleRegister(e) {
             e.preventDefault();
-            const username = document.getElementById('regUser').value;
-            const email = document.getElementById('regEmail').value;
-            const pass = document.getElementById('regPass').value;
-            const passConfirm = document.getElementById('regPassConfirm').value;
-
-            if(pass !== passConfirm) { alert("Şifreler birbiriyle eşleşmiyor!"); return; }
-            if(users.some(u => u.username === username)) { alert("Bu kullanıcı adı zaten alınmış."); return; }
-
-            const newUser = {
-                username,
-                email,
-                pass,
-                isAdmin: false,
-                banned: false,
-                joinDate: new Date().toLocaleDateString('tr-TR')
-            };
-
-            users.push(newUser);
-            currentUser = newUser;
+            const userVal = document.getElementById('regUser').value;
+            const emailVal = document.getElementById('regEmail').value;
+            currentUser = { username: userVal, email: emailVal, isAdmin: false };
             saveData();
             closeAuthModal();
-            triggerLoginLoading(() => {
-                updateNavbar();
-                renderView();
-            });
+            updateNavbar();
+            renderView();
         }
 
         function handleLogout() {
             currentUser = null;
             localStorage.removeItem('cpm_current_user');
             updateNavbar();
-            renderView();
-        }
-
-        let pendingPhotoData = [];
-
-        function openAddCarModal() {
-            if(!currentUser) { alert("İlan vermek için lütfen giriş yapın."); openAuthModal(); return; }
-            pendingPhotoData = [];
-            document.getElementById('addCarModal').classList.remove('hidden');
-            document.getElementById('photoPreview').innerHTML = '';
-            document.getElementById('photoCountText').innerText = 'Henüz görsel seçilmedi.';
-        }
-        function closeAddCarModal() { document.getElementById('addCarModal').classList.add('hidden'); }
-
-        function handlePhotoSelection(event) {
-            const files = Array.from(event.target.files || []).filter(f => f.type.startsWith('image/')).slice(0, 8);
-            pendingPhotoData = [];
-            const preview = document.getElementById('photoPreview');
-            preview.innerHTML = '';
-            if(!files.length) { document.getElementById('photoCountText').innerText = 'Henüz görsel seçilmedi.'; return; }
-            let completed = 0;
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const maxW = 1400;
-                        const scale = Math.min(1, maxW / img.width);
-                        const canvas = document.createElement('canvas');
-                        canvas.width = Math.max(1, Math.round(img.width * scale));
-                        canvas.height = Math.max(1, Math.round(img.height * scale));
-                        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-                        pendingPhotoData.push(canvas.toDataURL('image/jpeg', 0.82));
-                        completed++;
-                        if(completed === files.length) {
-                            preview.innerHTML = pendingPhotoData.map((src,i) => `<img src="${src}" class="rounded-lg border border-slate-700 object-cover" title="Görsel ${i+1}">`).join('');
-                            document.getElementById('photoCountText').innerText = `${pendingPhotoData.length} görsel seçildi.`;
-                        }
-                    };
-                    img.src = reader.result;
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function handleAddNewCar(e) {
-            e.preventDefault();
-            if(pendingPhotoData.length < 1) { alert("Lütfen galeriden en az 1 araç görseli seçin."); return; }
-            const newCar = {
-                id: Date.now(),
-                title: document.getElementById('carTitle').value.trim(),
-                hp: Number(document.getElementById('carHp').value),
-                condition: document.getElementById('carCondition').value,
-                price: Number(document.getElementById('carPrice').value),
-                currency: document.getElementById('carCurrency').value,
-                desc: document.getElementById('carDesc').value.trim(),
-                photos: [...pendingPhotoData],
-                status: 'BEKLEMEDE',
-                rejectionReason: '',
-                seller: currentUser.username,
-                likes: 0, dislikes: 0, views: 0, likedBy: [], dislikedBy: []
-            };
-            cars.push(newCar);
-            saveData();
-            closeAddCarModal();
-            document.getElementById('addCarForm').reset();
-            document.getElementById('photoPreview').innerHTML = '';
-            document.getElementById('photoCountText').innerText = 'Henüz görsel seçilmedi.';
-            pendingPhotoData = [];
-            alert("İlanınız başarıyla alındı! BEKLEMEDE → ADMİN İNCELEMESİ aşamasına gönderildi.");
-            changeView('profile');
+            changeView('home');
         }
     </script>
-    <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyCCcT3ZfleDbr2oqy1ABqCIUPW2YFtCdDs",
-    authDomain: "cpmpazari-1b476.firebaseapp.com",
-    projectId: "cpmpazari-1b476",
-    storageBucket: "cpmpazari-1b476.firebasestorage.app",
-    messagingSenderId: "137308367015",
-    appId: "1:137308367015:web:3855555195711633c45382",
-    measurementId: "G-W71510KHP2"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-       window.db = getFirestore(app);
-</script>
 </body>
 </html>
