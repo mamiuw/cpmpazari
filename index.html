@@ -1,38 +1,18 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <!-- Firebase kütüphaneleri -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-<script>
-  // Senin tam config kodun
-  const firebaseConfig = {
-    apiKey: "AIzaSyCCcT3ZfleDbr2oqy1ABqCIUPW2YFtCdDs",
-    authDomain: "cpmpazari-1b476.firebaseapp.com",
-    databaseURL: "https://cpmpazari-1b476-default-rtdb.firebaseio.com",
-    projectId: "cpmpazari-1b476",
-    storageBucket: "cpmpazari-1b476.firebasestorage.app",
-    messagingSenderId: "137308367015",
-    appId: "1:137308367015:web:3855555195711633c45382",
-    measurementId: "G-W71510KHP2"
-  };
-
-  // Firebase Başlat
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CPMPazari - Car Parking Multiplayer Araç İlanları</title>
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Firebase SDK Entegrasyonu (Cihazlar arası anlık senkronizasyon için) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <!-- Firebase SDK (v8) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
         tailwind.config = {
@@ -59,7 +39,6 @@
         .soft-enter { animation: softEnter .42s cubic-bezier(.22,.61,.36,1) both; }
         @keyframes softEnter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         #photoPreview img { aspect-ratio: 16 / 10; object-fit: cover; }
-        /* Mobil Dokunma ve Scroll Düzeltmesi */
         .modal-open { overflow: hidden; }
     </style>
 </head>
@@ -88,7 +67,6 @@
             </div>
 
             <div class="flex items-center space-x-2 sm:space-x-3">
-                <!-- Dil Seçici -->
                 <select id="languageSelect" onchange="changeLanguage(this.value)" class="bg-slate-800 border border-slate-700 text-white text-xs rounded-xl px-2 py-2 focus:outline-none focus:border-brand-500">
                     <option value="tr">🇹🇷 Türkçe</option>
                     <option value="en">🇬🇧 English</option>
@@ -112,7 +90,6 @@
                     <option value="vi">🇻🇳 Tiếng Việt</option>
                 </select>
 
-                <!-- Tema Değiştirici -->
                 <button onclick="toggleTheme()" id="themeToggleBtn" class="bg-slate-800 hover:bg-slate-700 text-amber-400 p-2.5 rounded-xl border border-slate-700 transition" title="Tema Değiştir">
                     <i class="fa-solid fa-sun text-sm"></i>
                 </button>
@@ -183,7 +160,7 @@
         </div>
     </div>
 
-    <!-- İlan Ekleme Modal (Mobilde Dokunma & Tıklama Sorunları Tamamen Düzeltildi) -->
+    <!-- İlan Ekleme Modal -->
     <div id="addCarModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl p-5 sm:p-6 shadow-2xl relative my-auto">
             <button type="button" onclick="closeAddCarModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 z-10"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -240,7 +217,7 @@
                 </div>
                 <div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl text-amber-400 text-xs flex items-center gap-2">
                     <i class="fa-solid fa-triangle-exclamation text-base"></i>
-                    <span>İlanınız yönetici onayından geçtikten sonra tüm cihazlarda (PC ve Mobil) anında görünecektir.</span>
+                    <span>İlanınız yönetici onayından geçtikten sonra tüm cihazlarda anında görünür.</span>
                 </div>
                 <button type="submit" id="submitCarBtn" class="w-full bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-slate-950 font-black py-4 rounded-xl transition shadow-lg shadow-brand-500/20 cursor-pointer text-base uppercase tracking-wider relative z-20">İlanı Onaya Gönder</button>
             </form>
@@ -250,19 +227,21 @@
     <!-- JAVASCRIPT MOTORU -->
     <script>
         // -------------------------------------------------------------
-        // FIREBASE ENTEGRASYONU (Cihazlar Arası Anlık İlan Senkronizasyonu)
+        // FIREBASE ENTEGRASYONU (TAM BAĞLANTI)
         // -------------------------------------------------------------
         const firebaseConfig = {
-            databaseURL: "https://cpmpazari-default-rtdb.firebaseio.com" // Ortak Veritabanı Adresi
+            apiKey: "AIzaSyCCcT3ZfleDbr2oqy1ABqCIUPW2YFtCdDs",
+            authDomain: "cpmpazari-1b476.firebaseapp.com",
+            databaseURL: "https://cpmpazari-1b476-default-rtdb.firebaseio.com",
+            projectId: "cpmpazari-1b476",
+            storageBucket: "cpmpazari-1b476.firebasestorage.app",
+            messagingSenderId: "137308367015",
+            appId: "1:137308367015:web:3855555195711633c45382",
+            measurementId: "G-W71510KHP2"
         };
         
-        let db = null;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.database();
-        } catch(e) {
-            console.warn("Firebase bağlantısı kurulamadı, yerel depolamaya geçiliyor:", e);
-        }
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
         const TRANSLATIONS = {
             tr: {
@@ -290,19 +269,6 @@
                 totalUsersCount: "Toplam Oyuncu",
                 pendingAdsHeader: "Bekleyen İlanlar",
                 noPendingAds: "Bekleyen ilan bulunmuyor.",
-                manageAllAdsHeader: "Tüm İlanları Yönet",
-                userManagementHeader: "Oyuncu Yönetimi",
-                usernameCol: "Kullanıcı Adı",
-                emailCol: "E-posta",
-                roleCol: "Rol",
-                statusCol: "Durum",
-                actionsCol: "İşlemler",
-                unbanBtn: "Engeli Kaldır",
-                banBtn: "Engelle",
-                systemOwner: "Sistem Sahibi",
-                approveBtn: "Onayla",
-                rejectBtn: "Reddet",
-                changePriceBtn: "Fiyat Değiştir",
                 loginTab: "Giriş Yap",
                 registerTab: "Kayıt Ol",
                 usernameOrEmail: "Kullanıcı Adı veya E-posta",
@@ -332,23 +298,17 @@
             listenToDatabase();
         };
 
-        // Veritabanını Anlık Dinle (Mobilde Yüklenen İlan PC'ye Sayfa Yenilenmeden Düşer)
+        // Firebase Canlı Dinleme
         function listenToDatabase() {
-            if (db) {
-                db.ref('cars').on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        cars = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-                    } else {
-                        cars = [];
-                    }
-                    localStorage.setItem('cpm_cars', JSON.stringify(cars));
-                    renderView();
-                });
-            } else {
-                cars = JSON.parse(localStorage.getItem('cpm_cars')) || [];
+            db.ref('cars').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    cars = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+                } else {
+                    cars = [];
+                }
                 renderView();
-            }
+            });
         }
 
         function toggleTheme() {
@@ -377,26 +337,15 @@
             renderView();
         }
 
-        function t(key) {
-            return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS['tr'][key] || key;
-        }
-
         function saveCarToDatabase(carObj) {
-            if (db) {
-                db.ref('cars/' + carObj.id).set(carObj);
-            } else {
-                cars.unshift(carObj);
-                localStorage.setItem('cpm_cars', JSON.stringify(cars));
-                renderView();
-            }
+            const newRef = db.ref('cars').push();
+            carObj.id = newRef.key;
+            newRef.set(carObj);
         }
 
         function updateCarInDatabase(carObj) {
-            if (db) {
+            if (carObj.id) {
                 db.ref('cars/' + carObj.id).update(carObj);
-            } else {
-                localStorage.setItem('cpm_cars', JSON.stringify(cars));
-                renderView();
             }
         }
 
@@ -668,7 +617,7 @@
             }
         }
 
-        // ADMIN PANELİ & ONAY MEKANİZMASI
+        // ADMIN PANELİ
         function getAdminHTML() {
             if(!currentUser || !currentUser.isAdmin) return `<div class="text-center py-20 text-red-500 font-bold">Bu sayfaya erişim yetkiniz yoktur!</div>`;
             const pendingCars = cars.filter(c => c.status === 'BEKLEMEDE');
@@ -712,7 +661,6 @@
             if(car) {
                 car.status = 'YAYINDA';
                 updateCarInDatabase(car);
-                alert('İlan onaylandı! Artık PC ve Mobil dâhil tüm cihazlarda görünüyor.');
             }
         }
 
@@ -724,7 +672,6 @@
             }
         }
 
-        // FOTOĞRAF VE MODAL İŞLEMLERİ (Mobil Optimize Edildi)
         function handlePhotoSelection(event) {
             const files = event.target.files;
             if(!files || files.length === 0) return;
@@ -753,7 +700,6 @@
             }
 
             const newCar = {
-                id: 'cpm_' + Date.now(),
                 title: document.getElementById('carTitle').value,
                 hp: document.getElementById('carHp').value,
                 condition: document.getElementById('carCondition').value,
@@ -770,13 +716,12 @@
 
             saveCarToDatabase(newCar);
             closeAddCarModal();
-            alert('İlanınız başarıyla gönderildi! Yönetici onayından sonra PC ve Mobilde ortak ekrana düşecektir.');
+            alert('İlanınız başarıyla gönderildi! Yönetici onayından sonra yayına alınacaktır.');
             uploadedPhotos = [];
             document.getElementById('addCarForm').reset();
             document.getElementById('photoPreview').innerHTML = '';
         }
 
-        // AUTH & MODAL KONTROLLERİ
         function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); document.body.classList.add('modal-open'); }
         function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); document.body.classList.remove('modal-open'); }
         function openAddCarModal() { document.getElementById('addCarModal').classList.remove('hidden'); document.body.classList.add('modal-open'); }
