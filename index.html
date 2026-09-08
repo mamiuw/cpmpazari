@@ -212,6 +212,57 @@
         </div>
     </div>
 
+
+    <!-- GERÇEK ZAMANLI MESAJLAŞMA -->
+    <div id="chatModal" class="fixed inset-0 z-[70] bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-5">
+        <div class="bg-slate-900 border border-slate-700/70 rounded-2xl w-full max-w-5xl h-[min(760px,92vh)] shadow-2xl overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-700/70 bg-slate-900/95">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-xl bg-brand-500 text-slate-950 font-black flex items-center justify-center"><i class="fa-solid fa-comments"></i></div>
+                    <div class="min-w-0">
+                        <h2 class="font-black text-white">Mesajlar</h2>
+                        <p id="chatStatusText" class="text-[11px] text-slate-400 truncate">Gerçek zamanlı mesajlaşma</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeChatModal()" class="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <div class="flex-1 min-h-0 flex">
+                <aside class="w-[34%] min-w-[230px] max-w-[330px] border-r border-slate-700/70 bg-slate-950/30 flex flex-col">
+                    <div class="p-3 border-b border-slate-700/60">
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                            <input id="chatSearchInput" oninput="filterChatConversations()" type="text" placeholder="Sohbet ara..." class="w-full bg-slate-800 border border-slate-700 rounded-xl pl-8 pr-3 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500">
+                        </div>
+                    </div>
+                    <div id="chatConversationList" class="flex-1 overflow-y-auto p-2 space-y-1">
+                        <div class="text-center text-xs text-slate-500 py-10">Henüz sohbet yok.</div>
+                    </div>
+                </aside>
+
+                <section class="flex-1 min-w-0 flex flex-col bg-slate-900">
+                    <div id="chatHeader" class="px-4 py-3 border-b border-slate-700/60 min-h-[65px] flex items-center">
+                        <div class="text-sm text-slate-500">Bir sohbet seçin veya ilan üzerinden oyuncuyla iletişime geçin.</div>
+                    </div>
+                    <div id="chatMessages" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-2">
+                        <div class="h-full flex flex-col items-center justify-center text-center text-slate-500">
+                            <i class="fa-regular fa-comments text-4xl mb-3 opacity-40"></i>
+                            <p class="text-sm">Mesajlarınız burada görünecek.</p>
+                        </div>
+                    </div>
+                    <div id="chatComposer" class="hidden border-t border-slate-700/60 p-3 sm:p-4">
+                        <div id="chatTypingText" class="h-4 text-[10px] text-brand-400 mb-1"></div>
+                        <form onsubmit="sendChatMessage(event)" class="flex items-end gap-2">
+                            <textarea id="chatMessageInput" rows="1" maxlength="2000" oninput="handleChatTyping()" onkeydown="handleChatKeydown(event)" placeholder="Mesajınızı yazın..." class="flex-1 resize-none bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500 max-h-32"></textarea>
+                            <button type="submit" class="shrink-0 w-11 h-11 rounded-xl bg-brand-500 hover:bg-brand-600 text-slate-950 font-black transition shadow-lg shadow-brand-500/20"><i class="fa-solid fa-paper-plane"></i></button>
+                        </form>
+                        <div class="text-[9px] text-slate-600 mt-1">Enter gönderir · Shift+Enter yeni satır</div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT MOTORU -->
     <script>
         const firebaseConfig = {
@@ -409,9 +460,14 @@
 
         function updateNavbar() {
             const area = document.getElementById('navAuthArea');
+            startChatConversationListener();
             if(currentUser) {
                 let adminBadge = currentUser.isAdmin ? `<span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-bold">Admin</span>` : '';
                 area.innerHTML = `
+                    <button onclick="openChatModal()" class="relative bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 border border-slate-700 active:scale-95" title="Mesajlar">
+                        <i class="fa-solid fa-comments"></i> <span class="hidden sm:inline">Mesajlar</span>
+                        <span id="navUnreadBadge" class="hidden absolute -top-1.5 -right-1.5 min-w-4 h-4 px-1 rounded-full bg-red-500 text-white text-[9px] leading-4 text-center font-black">0</span>
+                    </button>
                     <button onclick="openAddCarModal()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 px-3 sm:px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shadow-lg shadow-brand-500/20 active:scale-95">
                         <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">İlan Ver</span>
                     </button>
@@ -661,13 +717,309 @@
                                     <div class="text-xs text-slate-400">CPMPazari Doğrulanmış Oyuncu</div>
                                 </div>
                             </div>
-                            <button onclick="showCpmNotification('Oyuncu Bilgisi', 'CPM ID: #' + Math.floor(10000 + Math.random() * 90000), 'success')" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-brand-500/20 flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-gamepad"></i> <span>Oyuncu ile İletişime Geç (ID)</span>
+                            <button onclick="openChatWithUser('${String(car.seller || '').replace(/'/g, "\'")}')" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-brand-500/20 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-comments"></i> <span>Oyuncuyla İletişime Geç</span>
                             </button>
                         </div>
                     </div>
                 </div>
             `;
+        }
+
+
+        // ============================================================
+        // GERÇEK ZAMANLI MESAJLAŞMA SİSTEMİ (Firebase Realtime Database)
+        // ============================================================
+        let chatConversations = [];
+        let activeChatConversationId = null;
+        let activeChatRecipient = null;
+        let chatConversationListener = null;
+        let chatMessagesListener = null;
+        let chatTypingListener = null;
+        let chatTypingTimer = null;
+
+        function chatUserKey(username) {
+            return String(username || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+        }
+
+        function chatConversationId(userA, userB) {
+            return [chatUserKey(userA), chatUserKey(userB)].sort().join('__');
+        }
+
+        function escapeChatText(value) {
+            return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+        }
+
+        function formatChatTime(ts) {
+            if (!ts) return '';
+            const d = new Date(Number(ts));
+            if (Number.isNaN(d.getTime())) return '';
+            const today = new Date();
+            const sameDay = d.toDateString() === today.toDateString();
+            return sameDay ? d.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'}) : d.toLocaleDateString('tr-TR', {day:'2-digit', month:'2-digit', year:'2-digit'});
+        }
+
+        function getChatOtherParticipant(conv) {
+            if (!currentUser || !conv) return '';
+            return conv.participantNames && conv.participantNames[chatUserKey(currentUser.username)]
+                ? Object.values(conv.participantNames).find(n => n !== currentUser.username) || ''
+                : '';
+        }
+
+        function startChatConversationListener() {
+            if (chatConversationListener) {
+                chatConversationListener.off();
+                chatConversationListener = null;
+            }
+            if (!currentUser) return;
+            const key = chatUserKey(currentUser.username);
+            chatConversationListener = db.ref('conversations').orderByChild('participantKeys/' + key).equalTo(true);
+            chatConversationListener.on('value', snapshot => {
+                const data = snapshot.val() || {};
+                chatConversations = Object.keys(data).map(id => ({id, ...data[id]})).sort((a,b) => Number(b.lastMessageAt || 0) - Number(a.lastMessageAt || 0));
+                renderChatConversationList();
+                updateUnreadBadge();
+                if (activeChatConversationId) {
+                    const active = chatConversations.find(c => c.id === activeChatConversationId);
+                    if (active) updateChatHeader(active);
+                }
+            });
+        }
+
+        function updateUnreadBadge() {
+            const badge = document.getElementById('navUnreadBadge');
+            if (!badge) return;
+            const total = chatConversations.reduce((sum, c) => sum + Number((c.unreadFor || {})[chatUserKey(currentUser?.username)] || 0), 0);
+            badge.innerText = total > 99 ? '99+' : String(total);
+            badge.classList.toggle('hidden', total <= 0);
+        }
+
+        function renderChatConversationList() {
+            const box = document.getElementById('chatConversationList');
+            if (!box) return;
+            const search = (document.getElementById('chatSearchInput')?.value || '').toLowerCase().trim();
+            const list = chatConversations.filter(c => {
+                const other = getChatOtherParticipant(c);
+                return !search || other.toLowerCase().includes(search) || String(c.lastMessage || '').toLowerCase().includes(search);
+            });
+            if (!list.length) {
+                box.innerHTML = `<div class="text-center text-xs text-slate-500 py-10 px-4">${search ? 'Aramanızla eşleşen sohbet yok.' : 'Henüz sohbet yok. Bir ilandan oyuncuya mesaj gönderin.'}</div>`;
+                return;
+            }
+            box.innerHTML = list.map(c => {
+                const other = escapeChatText(getChatOtherParticipant(c));
+                const unread = Number((c.unreadFor || {})[chatUserKey(currentUser.username)] || 0);
+                const active = c.id === activeChatConversationId;
+                const preview = escapeChatText(c.lastMessage || 'Henüz mesaj yok');
+                return `<button type="button" onclick="openChatConversation('${c.id}')" class="w-full text-left p-3 rounded-xl transition ${active ? 'bg-brand-500/10 border border-brand-500/30' : 'hover:bg-slate-800 border border-transparent'}">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-10 h-10 rounded-xl bg-brand-500 text-slate-950 font-black flex items-center justify-center shrink-0">${other ? other[0].toUpperCase() : '?'}</div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center justify-between gap-2"><span class="font-bold text-sm text-white truncate">${other || 'Oyuncu'}</span><span class="text-[9px] text-slate-500 shrink-0">${formatChatTime(c.lastMessageAt)}</span></div>
+                            <div class="flex items-center gap-2 mt-0.5"><span class="text-[11px] text-slate-400 truncate flex-1">${preview}</span>${unread ? `<span class="min-w-4 h-4 px-1 rounded-full bg-brand-500 text-slate-950 text-[9px] leading-4 text-center font-black">${unread > 99 ? '99+' : unread}</span>` : ''}</div>
+                        </div>
+                    </div>
+                </button>`;
+            }).join('');
+        }
+
+        function filterChatConversations() { renderChatConversationList(); }
+
+        function openChatModal() {
+            if (!currentUser) {
+                showCpmNotification('Giriş Gerekli', 'Mesajlaşmak için önce giriş yapmalısınız.', 'error');
+                openAuthModal();
+                return;
+            }
+            document.getElementById('chatModal').classList.remove('hidden');
+            document.getElementById('chatModal').classList.add('flex');
+            document.body.classList.add('modal-open');
+            startChatConversationListener();
+            renderChatConversationList();
+        }
+
+        function closeChatModal() {
+            setChatTyping(false);
+            if (chatMessagesListener) { chatMessagesListener.off(); chatMessagesListener = null; }
+            if (chatTypingListener) { chatTypingListener.off(); chatTypingListener = null; }
+            activeChatConversationId = null;
+            activeChatRecipient = null;
+            document.getElementById('chatModal').classList.add('hidden');
+            document.getElementById('chatModal').classList.remove('flex');
+            document.body.classList.remove('modal-open');
+        }
+
+        function openChatWithUser(username) {
+            if (!currentUser) {
+                showCpmNotification('Giriş Gerekli', 'Oyuncuyla mesajlaşmak için önce giriş yapmalısınız.', 'error');
+                openAuthModal();
+                return;
+            }
+            if (!username || chatUserKey(username) === chatUserKey(currentUser.username)) {
+                showCpmNotification('Mesajlaşma', 'Kendinize mesaj gönderemezsiniz.', 'warning');
+                return;
+            }
+            openChatModal();
+            activeChatRecipient = username;
+            const id = chatConversationId(currentUser.username, username);
+            const existing = chatConversations.find(c => c.id === id);
+            if (existing) openChatConversation(id);
+            else {
+                activeChatConversationId = id;
+                renderChatConversationList();
+                renderEmptyChat(username);
+            }
+        }
+
+        function renderEmptyChat(username) {
+            const header = document.getElementById('chatHeader');
+            const messages = document.getElementById('chatMessages');
+            const composer = document.getElementById('chatComposer');
+            header.innerHTML = `<div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-brand-500 text-slate-950 font-black flex items-center justify-center">${escapeChatText(username[0] || '?').toUpperCase()}</div><div><div class="font-bold text-white">${escapeChatText(username)}</div><div class="text-[10px] text-slate-500">Yeni sohbet · mesajınız gönderilmeye hazır</div></div></div>`;
+            messages.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-center text-slate-500"><i class="fa-regular fa-paper-plane text-3xl mb-3 opacity-40"></i><p class="text-sm">${escapeChatText(username)} adlı oyuncuya ilk mesajınızı gönderin.</p></div>`;
+            composer.classList.remove('hidden');
+            document.getElementById('chatMessageInput').focus();
+        }
+
+        function openChatConversation(conversationId) {
+            if (!currentUser || !conversationId) return;
+            const conv = chatConversations.find(c => c.id === conversationId);
+            if (!conv) return;
+            activeChatConversationId = conversationId;
+            activeChatRecipient = getChatOtherParticipant(conv);
+            renderChatConversationList();
+            updateChatHeader(conv);
+            attachChatMessagesListener(conversationId);
+            markConversationRead(conversationId);
+            document.getElementById('chatComposer').classList.remove('hidden');
+            setTimeout(() => document.getElementById('chatMessageInput')?.focus(), 50);
+        }
+
+        function updateChatHeader(conv) {
+            const other = getChatOtherParticipant(conv) || activeChatRecipient || 'Oyuncu';
+            document.getElementById('chatHeader').innerHTML = `<div class="flex items-center gap-3 min-w-0"><div class="w-10 h-10 rounded-xl bg-brand-500 text-slate-950 font-black flex items-center justify-center shrink-0">${escapeChatText(other[0] || '?').toUpperCase()}</div><div class="min-w-0"><div class="font-bold text-white truncate">${escapeChatText(other)}</div><div id="chatOnlineText" class="text-[10px] text-emerald-400">● Gerçek zamanlı sohbet</div></div></div>`;
+        }
+
+        function ensureConversation() {
+            if (!currentUser || !activeChatRecipient) return null;
+            const id = chatConversationId(currentUser.username, activeChatRecipient);
+            const myKey = chatUserKey(currentUser.username);
+            const otherKey = chatUserKey(activeChatRecipient);
+            const ref = db.ref('conversations/' + id);
+            ref.transaction(current => current || {
+                participantKeys: {[myKey]: true, [otherKey]: true},
+                participantNames: {[myKey]: currentUser.username, [otherKey]: activeChatRecipient},
+                unreadFor: {[myKey]: 0, [otherKey]: 0},
+                createdAt: firebase.database.ServerValue.TIMESTAMP,
+                lastMessage: '',
+                lastMessageAt: firebase.database.ServerValue.TIMESTAMP,
+                lastSender: ''
+            });
+            return id;
+        }
+
+        function attachChatMessagesListener(conversationId) {
+            if (chatMessagesListener) { chatMessagesListener.off(); chatMessagesListener = null; }
+            if (chatTypingListener) { chatTypingListener.off(); chatTypingListener = null; }
+            const box = document.getElementById('chatMessages');
+            chatMessagesListener = db.ref('messages/' + conversationId).orderByChild('sentAt');
+            chatMessagesListener.on('value', snapshot => {
+                const data = snapshot.val() || {};
+                const msgs = Object.keys(data).map(id => ({id, ...data[id]})).sort((a,b) => Number(a.sentAt || 0) - Number(b.sentAt || 0));
+                if (!msgs.length) {
+                    box.innerHTML = `<div class="h-full flex items-center justify-center text-slate-500 text-sm">Henüz mesaj yok. Sohbeti başlatın.</div>`;
+                    return;
+                }
+                box.innerHTML = msgs.map(m => {
+                    const mine = chatUserKey(m.sender) === chatUserKey(currentUser.username);
+                    return `<div class="flex ${mine ? 'justify-end' : 'justify-start'}"><div class="max-w-[82%] sm:max-w-[70%] ${mine ? 'bg-brand-500 text-slate-950 rounded-2xl rounded-br-md' : 'bg-slate-800 text-white rounded-2xl rounded-bl-md border border-slate-700'} px-3.5 py-2.5 shadow-sm"><div class="text-sm whitespace-pre-wrap break-words">${escapeChatText(m.text)}</div><div class="flex items-center justify-end gap-1 mt-1 ${mine ? 'text-slate-700' : 'text-slate-500'} text-[9px]">${formatChatTime(m.sentAt)} ${mine ? (m.read ? '<i class="fa-solid fa-check-double"></i>' : '<i class="fa-solid fa-check"></i>') : ''}</div></div></div>`;
+                }).join('');
+                requestAnimationFrame(() => { box.scrollTop = box.scrollHeight; });
+                markConversationRead(conversationId);
+            });
+
+            chatTypingListener = db.ref('typing/' + conversationId);
+            chatTypingListener.on('value', snapshot => {
+                const data = snapshot.val() || {};
+                const otherKey = chatUserKey(activeChatRecipient);
+                const typing = !!data[otherKey];
+                document.getElementById('chatTypingText').innerText = typing ? `${activeChatRecipient} yazıyor...` : '';
+            });
+        }
+
+        function markConversationRead(conversationId) {
+            if (!currentUser) return;
+            const myKey = chatUserKey(currentUser.username);
+            const updates = {};
+            updates['conversations/' + conversationId + '/unreadFor/' + myKey] = 0;
+            db.ref('messages/' + conversationId).once('value').then(snapshot => {
+                const data = snapshot.val() || {};
+                Object.keys(data).forEach(id => {
+                    if (chatUserKey(data[id].receiver) === myKey && !data[id].read) updates['messages/' + conversationId + '/' + id + '/read'] = true;
+                });
+                if (Object.keys(updates).length) db.ref().update(updates);
+            });
+        }
+
+        function handleChatKeydown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                e.currentTarget.form.requestSubmit();
+            }
+        }
+
+        function handleChatTyping() {
+            if (!activeChatConversationId || !currentUser) return;
+            setChatTyping(true);
+            clearTimeout(chatTypingTimer);
+            chatTypingTimer = setTimeout(() => setChatTyping(false), 1200);
+        }
+
+        function setChatTyping(isTyping) {
+            if (!currentUser || !activeChatConversationId) return;
+            const ref = db.ref('typing/' + activeChatConversationId + '/' + chatUserKey(currentUser.username));
+            if (isTyping) {
+                ref.set(true);
+                ref.onDisconnect().remove();
+            } else {
+                ref.remove();
+            }
+        }
+
+        function sendChatMessage(e) {
+            e.preventDefault();
+            if (!currentUser || !activeChatRecipient) return;
+            const input = document.getElementById('chatMessageInput');
+            const text = input.value.trim();
+            if (!text) return;
+            const id = ensureConversation();
+            if (!id) return;
+            const myKey = chatUserKey(currentUser.username);
+            const otherKey = chatUserKey(activeChatRecipient);
+            const messageRef = db.ref('messages/' + id).push();
+            const message = {
+                sender: currentUser.username,
+                receiver: activeChatRecipient,
+                text: text,
+                sentAt: firebase.database.ServerValue.TIMESTAMP,
+                read: false
+            };
+            const updates = {};
+            updates['messages/' + id + '/' + messageRef.key] = message;
+            updates['conversations/' + id + '/participantKeys/' + myKey] = true;
+            updates['conversations/' + id + '/participantKeys/' + otherKey] = true;
+            updates['conversations/' + id + '/participantNames/' + myKey] = currentUser.username;
+            updates['conversations/' + id + '/participantNames/' + otherKey] = activeChatRecipient;
+            updates['conversations/' + id + '/lastMessage'] = text.slice(0, 120);
+            updates['conversations/' + id + '/lastMessageAt'] = firebase.database.ServerValue.TIMESTAMP;
+            updates['conversations/' + id + '/lastSender'] = currentUser.username;
+            updates['conversations/' + id + '/unreadFor/' + myKey] = 0;
+            updates['conversations/' + id + '/unreadFor/' + otherKey] = firebase.database.ServerValue.increment ? firebase.database.ServerValue.increment(1) : 1;
+            db.ref().update(updates).then(() => {
+                input.value = '';
+                input.style.height = 'auto';
+                setChatTyping(false);
+            }).catch(() => showCpmNotification('Mesaj Gönderilemedi', 'Mesaj gönderilirken bir hata oluştu. Firebase bağlantınızı kontrol edin.', 'error'));
         }
 
         function getProfileHTML() {
@@ -1162,6 +1514,9 @@
         }
 
         function handleLogout() {
+            if (chatConversationListener) { chatConversationListener.off(); chatConversationListener = null; }
+            if (chatMessagesListener) { chatMessagesListener.off(); chatMessagesListener = null; }
+            if (chatTypingListener) { chatTypingListener.off(); chatTypingListener = null; }
             currentUser = null;
             localStorage.removeItem('cpm_current_user');
             updateNavbar();
