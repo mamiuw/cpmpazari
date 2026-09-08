@@ -277,6 +277,7 @@
                 } else {
                     cars = [];
                 }
+                normalizeExistingCarCodes();
                 renderView();
             });
 
@@ -366,12 +367,31 @@
         }
 
         function generateCarCode() {
-            let result = '';
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            for (let i = 0; i < 8; i++) {
-                result += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            return result;
+            const usedCodes = new Set(cars.map(c => String(c.carCode || '')).filter(code => /^\d{8}$/.test(code)));
+            let code;
+            do {
+                code = String(Math.floor(10000000 + Math.random() * 90000000));
+            } while (usedCodes.has(code));
+            return code;
+        }
+
+        function normalizeExistingCarCodes() {
+            const usedCodes = new Set();
+            cars.forEach(car => {
+                if (/^\d{8}$/.test(String(car.carCode || ''))) usedCodes.add(String(car.carCode));
+            });
+
+            cars.forEach(car => {
+                if (!/^\d{8}$/.test(String(car.carCode || ''))) {
+                    let code;
+                    do {
+                        code = String(Math.floor(10000000 + Math.random() * 90000000));
+                    } while (usedCodes.has(code));
+                    usedCodes.add(code);
+                    car.carCode = code;
+                    db.ref('cars/' + car.id).update({ carCode: code });
+                }
+            });
         }
 
         function saveCarToDatabase(carObj) {
@@ -416,6 +436,7 @@
         function changeView(viewName, param = null) {
             currentView = viewName;
             if(param !== null) selectedCarId = param;
+            if(viewName === 'detail' && param !== null) registerCarView(param);
             renderView();
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
@@ -426,6 +447,10 @@
             else if(currentView === 'detail') container.innerHTML = getDetailHTML(selectedCarId);
             else if(currentView === 'profile') container.innerHTML = getProfileHTML();
             else if(currentView === 'admin') container.innerHTML = getAdminHTML();
+            if(currentView === 'detail') {
+                const detailCar = cars.find(c => c.id == selectedCarId);
+                if(detailCar) syncReactionButtons(detailCar);
+            }
         }
 
         function formatPrice(car) {
@@ -448,10 +473,9 @@
                 <div class="soft-enter bg-slate-800/60 border border-slate-700/50 rounded-2xl p-4 sm:p-6 mb-6 backdrop-blur-md shadow-xl">
                     <h1 class="text-xl sm:text-2xl font-black mb-2 text-white">Car Parking Pazarında Hayalindeki Arabayı Bul</h1>
                     <p class="text-slate-400 text-xs sm:text-sm mb-4">Sahibinden tarzı kompakt liste görünümüyle hızlıca ilanları incele.</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <input type="text" id="filterSearch" placeholder="Araç veya ilan ara..." class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
-                        <input type="text" id="filterCarCode" placeholder="İlan No ile Ara (Örn: A7F2K9L1)" class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500 uppercase">
-                        <button onclick="filterCars()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-brand-500/20"><i class="fa-solid fa-filter"></i> Filtrele</button>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="filterSearch" placeholder="Araç veya ilan ara..." oninput="filterCars()" class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                        <input type="text" id="filterCarCode" inputmode="numeric" maxlength="8" pattern="[0-9]{8}" placeholder="8 haneli ilan numarası..." oninput="this.value=this.value.replace(/\D/g,'').slice(0,8); filterCars()" class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
                     </div>
                 </div>
                 <div class="flex justify-between items-center mb-4">
@@ -515,18 +539,69 @@
             grid.innerHTML = filtered.length ? filtered.map(c => carCardTemplate(c)).join('') : `<div class="text-center py-12 text-slate-500 bg-slate-800/40 rounded-2xl border border-slate-800">Aradığınız kriterlere uygun ilan bulunamadı.</div>`;
         }
 
+        function getViewerKey() {
+            if (currentUser && currentUser.username) return 'user_' + currentUser.username.replace(/[^a-zA-Z0-9_-]/g, '_');
+            let guestKey = localStorage.getItem('cpm_guest_viewer_id');
+            if (!guestKey) {
+                guestKey = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+                localStorage.setItem('cpm_guest_viewer_id', guestKey);
+            }
+            return guestKey;
+        }
+
+        function registerCarView(id) {
+            if (!id) return;
+            const viewerKey = getViewerKey();
+            const viewerRef = db.ref('carViewers/' + id + '/' + viewerKey);
+            viewerRef.once('value').then(snapshot => {
+                if (snapshot.exists()) return;
+                return viewerRef.transaction(current => current || { viewedAt: firebase.database.ServerValue.TIMESTAMP }).then(result => {
+                    if (result.committed && result.snapshot && result.snapshot.exists()) {
+                        return db.ref('cars/' + id + '/views').transaction(v => (Number(v) || 0) + 1);
+                    }
+                });
+            }).catch(() => {
+                // Görüntülenme yazılamazsa ilan görüntüleme akışı bozulmaz.
+            });
+        }
+
+        function reactToCar(id, reaction) {
+            const car = cars.find(c => c.id == id);
+            if (!car || !['like','dislike'].includes(reaction)) return;
+            const key = 'cpm_reaction_' + id;
+            const previous = localStorage.getItem(key);
+            const updates = {};
+
+            if (previous === reaction) {
+                updates[reaction === 'like' ? 'likes' : 'dislikes'] = Math.max(0, Number(car[reaction === 'like' ? 'likes' : 'dislikes'] || 0) - 1);
+                localStorage.removeItem(key);
+            } else {
+                if (previous) {
+                    const oldField = previous === 'like' ? 'likes' : 'dislikes';
+                    updates[oldField] = Math.max(0, Number(car[oldField] || 0) - 1);
+                }
+                const newField = reaction === 'like' ? 'likes' : 'dislikes';
+                updates[newField] = Number(car[newField] || 0) + 1;
+                localStorage.setItem(key, reaction);
+            }
+
+            db.ref('cars/' + id).update(updates);
+        }
+
+        function syncReactionButtons(car) {
+            const previous = localStorage.getItem('cpm_reaction_' + car.id);
+            const likeBtn = document.getElementById('likeBtn-' + car.id);
+            const dislikeBtn = document.getElementById('dislikeBtn-' + car.id);
+            if (!likeBtn || !dislikeBtn) return;
+            likeBtn.classList.toggle('bg-emerald-500/20', previous === 'like');
+            likeBtn.classList.toggle('text-emerald-400', previous === 'like');
+            dislikeBtn.classList.toggle('bg-rose-500/20', previous === 'dislike');
+            dislikeBtn.classList.toggle('text-rose-400', previous === 'dislike');
+        }
+
         function getDetailHTML(id) {
             const car = cars.find(c => c.id == id);
             if(!car) return `<div class="text-center py-20 text-slate-400">İlan bulunamadı. <button onclick="changeView('home')" class="text-brand-500 underline">Ana sayfaya dön</button></div>`;
-            
-            // Gerçek Görüntülenme Sayacı (Her kullanıcı kendi oturumunda bu ilana ilk defa baktığında artar)
-            let viewedList = JSON.parse(localStorage.getItem('cpm_viewed_cars') || '[]');
-            if (!viewedList.includes(id)) {
-                viewedList.push(id);
-                localStorage.setItem('cpm_viewed_cars', JSON.stringify(viewedList));
-                car.views = (car.views || 0) + 1;
-                updateCarInDatabase(car);
-            }
             
             const firstPhoto = car.photos && car.photos.length > 0 ? car.photos[0] : 'https://via.placeholder.com/600x400?text=CPM+Arac';
 
@@ -566,7 +641,14 @@
                             <div class="space-y-3 border-t border-slate-700/60 pt-4 text-sm">
                                 <div class="flex justify-between"><span class="text-slate-400">Para Birimi:</span> <span class="font-bold text-white">${currencyLabel(car.currency)}</span></div>
                                 <div class="flex justify-between"><span class="text-slate-400">Motor Gücü:</span> <span class="font-bold text-white">${car.hp || 0} HP</span></div>
-                                <div class="flex justify-between"><span class="text-slate-400">Görüntülenme:</span> <span class="font-bold text-white">${car.views || 0}</span></div>
+                                <div class="flex justify-between"><span class="text-slate-400">Görüntülenme:</span> <span class="font-bold text-white" id="detailViews-${car.id}">${car.views || 0}</span></div>
+                            </div>
+                            <div class="mt-5 pt-4 border-t border-slate-700/60">
+                                <div class="text-xs font-bold text-slate-400 uppercase mb-2">İlanı Değerlendir</div>
+                                <div class="flex gap-2">
+                                    <button id="likeBtn-${car.id}" onclick="reactToCar('${car.id}','like')" class="flex-1 bg-slate-900 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-400 border border-slate-700 rounded-xl py-2.5 text-sm font-bold transition">👍 <span id="likeCount-${car.id}">${car.likes || 0}</span></button>
+                                    <button id="dislikeBtn-${car.id}" onclick="reactToCar('${car.id}','dislike')" class="flex-1 bg-slate-900 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 border border-slate-700 rounded-xl py-2.5 text-sm font-bold transition">👎 <span id="dislikeCount-${car.id}">${car.dislikes || 0}</span></button>
+                                </div>
                             </div>
                         </div>
 
@@ -968,6 +1050,8 @@
                 seller: currentUser.username,
                 status: 'BEKLEMEDE',
                 views: 0,
+                likes: 0,
+                dislikes: 0,
                 discounted: false
             };
 
