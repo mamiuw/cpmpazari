@@ -41,7 +41,6 @@
         #photoPreview img { aspect-ratio: 16 / 10; object-fit: cover; }
         .modal-open { overflow: hidden; }
         
-        /* Özel Bildirim Kutusu Stili */
         #cpmNotificationBox {
             position: fixed;
             bottom: 24px;
@@ -78,15 +77,6 @@
         <p class="mt-1 text-slate-400 text-xs">CPMPazari verileri senkronize ediliyor</p>
     </div>
 
-    <!-- GENEL YÜKLENME EKRANI -->
-    <div id="loadingScreen" class="fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center transition-opacity duration-500 hidden">
-        <div class="relative flex items-center justify-center">
-            <div class="w-20 h-20 border-4 border-brand-500/20 border-t-brand-500 rounded-full animate-spin"></div>
-            <i class="fa-solid fa-car text-brand-500 text-2xl absolute"></i>
-        </div>
-        <p class="mt-4 text-slate-300 font-medium tracking-wide animate-pulse" id="loadingText">Giriş Yapılıyor, Yükleniyor...</p>
-    </div>
-
     <!-- NAVBAR -->
     <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -96,7 +86,7 @@
                 </div>
                 <div>
                     <span class="text-2xl font-black tracking-tight text-white dark:text-white">CPM<span class="text-brand-500">Pazari</span></span>
-                    <span class="block text-[10px] text-slate-400 tracking-widest uppercase font-semibold" data-i18n="navSubTitle">Car Parking Multiplayer Pazar</span>
+                    <span class="block text-[10px] text-slate-400 tracking-widest uppercase font-semibold">Car Parking Multiplayer Pazar</span>
                 </div>
             </div>
 
@@ -105,120 +95,87 @@
                     <option value="tr">🇹🇷 Türkçe</option>
                     <option value="en">🇬🇧 English</option>
                     <option value="de">🇩🇪 Deutsch</option>
-                    <option value="fr">🇫🇷 Français</option>
-                    <option value="es">🇪🇸 Español</option>
-                    <option value="ru">🇷🇺 Русский</option>
-                    <option value="ar">🇸🇦 العربية</option>
-                    <option value="az">🇦🇿 Azərbaycan</option>
-                    <option value="fa">🇮🇷 فارسی</option>
-                    <option value="id">🇮🇩 Indonesia</option>
-                    <option value="pt">🇵🇹 Português</option>
-                    <option value="it">🇮🇹 Italiano</option>
-                    <option value="ja">🇯🇵 日本語</option>
-                    <option value="ko">🇰🇷 한국어</option>
-                    <option value="zh">🇨🇳 中文</option>
-                    <option value="pl">🇵🇱 Polski</option>
-                    <option value="nl">🇳🇱 Nederlands</option>
-                    <option value="uk">🇺🇦 Українська</option>
-                    <option value="hi">🇮🇳 हिन्दी</option>
-                    <option value="vi">🇻🇳 Tiếng Việt</option>
                 </select>
 
                 <button onclick="toggleTheme()" id="themeToggleBtn" class="bg-slate-800 hover:bg-slate-700 text-amber-400 p-2.5 rounded-xl border border-slate-700 transition" title="Tema Değiştir">
                     <i class="fa-solid fa-sun text-sm"></i>
                 </button>
 
-                <div class="flex items-center space-x-2 sm:space-x-4" id="navAuthArea">
-                    <!-- Dinamik dolacak -->
-                </div>
+                <div class="flex items-center space-x-2 sm:space-x-4" id="navAuthArea"></div>
             </div>
         </div>
     </header>
 
     <!-- ANA İÇERİK CONTAINER -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8" id="mainContainer">
-        <!-- İçerikler JavaScript ile yüklenecek -->
-    </main>
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8" id="mainContainer"></main>
 
     <!-- FOOTER -->
     <footer class="bg-slate-950 border-t border-slate-800 py-8 mt-auto">
         <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
-            <p data-i18n="footerCopy">&copy; 2026 CPMPazari. Car Parking Multiplayer Alım Satım Platformu.</p>
+            <p>&copy; 2026 CPMPazari. Car Parking Multiplayer Alım Satım Platformu.</p>
         </div>
     </footer>
 
-    <!-- MODALLER -->
-    <!-- Giriş / Kayıt Modal -->
+    <!-- GİRİŞ / KAYIT MODAL -->
     <div id="authModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             
             <div class="flex border-b border-slate-800 mb-6">
-                <button onclick="switchTab('login')" id="loginTabBtn" class="flex-1 pb-3 font-bold text-brand-500 border-b-2 border-brand-500 transition" data-i18n="loginTab">Giriş Yap</button>
-                <button onclick="switchTab('register')" id="registerTabBtn" class="flex-1 pb-3 font-bold text-slate-400 hover:text-white transition" data-i18n="registerTab">Kayıt Ol</button>
+                <button onclick="switchTab('login')" id="loginTabBtn" class="flex-1 pb-3 font-bold text-brand-500 border-b-2 border-brand-500 transition">Giriş Yap</button>
+                <button onclick="switchTab('register')" id="registerTabBtn" class="flex-1 pb-3 font-bold text-slate-400 hover:text-white transition">Kayıt Ol</button>
             </div>
 
             <!-- Giriş Formu -->
             <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1" data-i18n="usernameOrEmail">Kullanıcı Adı veya E-posta</label>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Kullanıcı Adı veya E-posta</label>
                     <input type="text" id="loginUser" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1" data-i18n="password">Şifre</label>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Şifre</label>
                     <input type="password" id="loginPass" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
                 </div>
-                <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-brand-500/20" data-i18n="loginBtn">Giriş Yap</button>
+                <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-brand-500/20">Giriş Yap</button>
             </form>
 
             <!-- Kayıt Formu -->
             <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-4 hidden">
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1" data-i18n="username">Kullanıcı Adı</label>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Kullanıcı Adı</label>
                     <input type="text" id="regUser" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1" data-i18n="email">E-posta Adresi</label>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">E-posta Adresi</label>
                     <input type="email" id="regEmail" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1" data-i18n="password">Şifre</label>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Şifre</label>
                     <input type="password" id="regPass" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1" data-i18n="passwordConfirm">Şifre Tekrarı</label>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Şifre Tekrarı</label>
                     <input type="password" id="regPassConfirm" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
                 </div>
-                <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-brand-500/20" data-i18n="registerBtn">Kayıt Ol</button>
+                <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-brand-500/20">Kayıt Ol</button>
             </form>
         </div>
     </div>
 
-    <!-- İlan Ekleme Modal -->
+    <!-- İLAN EKLEME MODAL -->
     <div id="addCarModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl p-5 sm:p-6 shadow-2xl relative my-auto">
             <button type="button" onclick="closeAddCarModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 z-10"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-car text-brand-500"></i> <span data-i18n="addCarModalTitle">Car Parking Araç İlanı Ver</span></h2>
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-car text-brand-500"></i> <span>Car Parking Araç İlanı Ver</span></h2>
             
             <form id="addCarForm" onsubmit="handleAddNewCar(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">İlan Başlığı</label>
                     <input type="text" id="carTitle" required placeholder="Örn: Full Crown Şahin / Temiz Araç" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Motor Gücü (HP)</label>
-                        <input type="number" id="carHp" min="0" required placeholder="1695" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Modifiye / Tuning Durumu</label>
-                        <select id="carCondition" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
-                            <option value="Full Crown + W16">Full Crown + W16 (Full+Full)</option>
-                            <option value="Drift Spec (Ayarlı)">Drift Spec (Ayarlı)</option>
-                            <option value="Drag Spec (1695 HP)">Drag Spec (1695 HP)</option>
-                            <option value="Stock (Orijinal)">Stock (Orijinal)</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Motor Gücü (HP)</label>
+                    <input type="number" id="carHp" min="0" required placeholder="1695" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -260,9 +217,6 @@
 
     <!-- JAVASCRIPT MOTORU -->
     <script>
-        // -------------------------------------------------------------
-        // FIREBASE ENTEGRASYONU (TAM BAĞLANTI)
-        // -------------------------------------------------------------
         const firebaseConfig = {
             apiKey: "AIzaSyCCcT3ZfleDbr2oqy1ABqCIUPW2YFtCdDs",
             authDomain: "cpmpazari-1b476.firebaseapp.com",
@@ -276,46 +230,6 @@
         
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-
-        const TRANSLATIONS = {
-            tr: {
-                navSubTitle: "Car Parking Multiplayer Pazar",
-                homeTitle: "Car Parking Pazarında Hayalindeki Arabayı Bul",
-                homeDesc: "1695 HP araçlar, özel kaplamalı (vinyl) ve Crown'lu en gözde CPM araçlarını keşfet.",
-                searchPlaceholder: "Araç veya model ara...",
-                filterBtn: "Filtrele",
-                currentAds: "Güncel İlanlar",
-                adsShowing: "ilan gösteriliyor",
-                inspectAd: "İlanı İncele",
-                backToAds: "İlanlara Geri Dön",
-                carDescription: "Araç Açıklama & Tuning Detayları",
-                sellerInfo: "Satıcı Bilgileri",
-                verifiedMember: "CPMPazari Doğrulanmış Oyuncu",
-                callSeller: "Oyuncu ile İletişime Geç (ID)",
-                myActiveAds: "Aktif / Bekleyen / Reddedilen İlanlarım",
-                mySoldAds: "Satılmış İlanlarım",
-                noActiveAds: "Aktif ilanınız bulunmuyor.",
-                noSoldAds: "Satılmış ilanınız bulunmuyor.",
-                markAsSold: "Satıldı İşaretle",
-                adminPanelTitle: "Admin Paneli",
-                adminPanelDesc: "Car Parking ilanlarını denetleyin, oyuncuları yönetin.",
-                pendingAdsCount: "Bekleyen İlan",
-                totalUsersCount: "Toplam Oyuncu",
-                pendingAdsHeader: "Bekleyen İlanlar",
-                noPendingAds: "Bekleyen ilan bulunmuyor.",
-                loginTab: "Giriş Yap",
-                registerTab: "Kayıt Ol",
-                usernameOrEmail: "Kullanıcı Adı veya E-posta",
-                password: "Şifre",
-                loginBtn: "Giriş Yap",
-                username: "Kullanıcı Adı",
-                email: "E-posta Adresi",
-                passwordConfirm: "Şifre Tekrarı",
-                registerBtn: "Kayıt Ol",
-                addCarModalTitle: "Car Parking Araç İlanı Ver",
-                footerCopy: "© 2026 CPMPazari. Car Parking Multiplayer Alım Satım Platformu."
-            }
-        };
 
         let currentUser = JSON.parse(localStorage.getItem('cpm_current_user')) || null;
         let cars = [];
@@ -334,7 +248,6 @@
             listenToDatabase();
         };
 
-        // mami123 / mamican123 admin hesabını garanti veritabanına kaydet
         function checkAndSeedAdmin() {
             db.ref('users').once('value', (snapshot) => {
                 const data = snapshot.val();
@@ -356,7 +269,6 @@
             });
         }
 
-        // Firebase Canlı Dinleme (İlanlar ve Kullanıcılar)
         function listenToDatabase() {
             db.ref('cars').on('value', (snapshot) => {
                 const data = snapshot.val();
@@ -397,9 +309,7 @@
             }
 
             box.classList.add('show');
-            setTimeout(() => {
-                box.classList.remove('show');
-            }, 3500);
+            setTimeout(() => { box.classList.remove('show'); }, 3500);
         }
 
         function toggleTheme() {
@@ -440,7 +350,7 @@
         function saveCarToDatabase(carObj) {
             const newRef = db.ref('cars').push();
             carObj.id = newRef.key;
-            carObj.carCode = generateCarCode(); // 8 haneli rastgele benzersiz ilan kodu
+            carObj.carCode = generateCarCode();
             newRef.set(carObj);
         }
 
@@ -509,7 +419,7 @@
             return `
                 <div class="soft-enter bg-slate-800/60 border border-slate-700/50 rounded-2xl p-4 sm:p-6 mb-8 backdrop-blur-md shadow-xl">
                     <h1 class="text-xl sm:text-3xl font-black mb-2 text-white">Car Parking Pazarında Hayalindeki Arabayı Bul</h1>
-                    <p class="text-slate-400 text-xs sm:text-sm mb-6">1695 HP araçlar, özel kaplamalı (vinyl) ve Crown'lu en gözde CPM araçlarını keşfet.</p>
+                    <p class="text-slate-400 text-xs sm:text-sm mb-6">1695 HP araçlar, özel kaplamalı ve en gözde CPM araçlarını keşfet.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <input type="text" id="filterSearch" placeholder="Araç veya ilan ara..." class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
                         <input type="text" id="filterCarCode" placeholder="İlan Numarasıyla Ara (Örn: A7F2K9L1)" class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500 uppercase">
@@ -532,7 +442,6 @@
                 <div class="soft-enter bg-slate-800/80 border border-slate-700/60 rounded-2xl overflow-hidden hover:border-brand-500/50 transition duration-300 group flex flex-col shadow-lg">
                     <div class="relative h-48 sm:h-52 overflow-hidden bg-slate-900">
                         <img src="${photo}" alt="${car.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        <div class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-brand-400 border border-brand-500/30">${car.condition || 'Tuning Bilgisi Yok'}</div>
                         <div class="absolute top-3 right-3 bg-slate-950/85 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-white border border-slate-700">${currencyLabel(car.currency)}</div>
                         <div class="absolute bottom-3 left-3 bg-slate-950/90 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold text-amber-400 border border-slate-700">İlan No: ${car.carCode || 'YOK'}</div>
                         <div class="absolute bottom-3 right-3 bg-slate-950/90 backdrop-blur-md px-3 py-1.5 rounded-xl font-black text-brand-400 text-base sm:text-lg border border-slate-700 shadow-xl">${formatPrice(car)}</div>
@@ -581,7 +490,6 @@
             const car = cars.find(c => c.id == id);
             if(!car) return;
 
-            // Kullanıcı bazlı tek seferlik beğeni kontrolü
             if(!car.reacts) car.reacts = {};
             const userKey = currentUser.username.replace(/[.#$\/\[\]]/g, '_');
             
@@ -635,7 +543,6 @@
                     <div class="space-y-6">
                         <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 shadow-xl">
                             <div class="flex justify-between items-center mb-2">
-                                <span class="text-xs bg-brand-500/20 text-brand-400 px-3 py-1 rounded-full font-bold border border-brand-500/30">${car.condition}</span>
                                 <span class="text-xs font-mono font-bold bg-slate-900 px-2.5 py-1 rounded-lg text-amber-400 border border-slate-700">İlan No: ${car.carCode || 'YOK'}</span>
                             </div>
                             <h1 class="text-xl font-bold text-white mt-3 mb-2">${car.title}</h1>
@@ -740,27 +647,68 @@
             }
         }
 
-        // PROFESYONEL ADMIN PANELİ
+        // PROFESYONEL ADMIN PANELİ (10+ GELİŞMİŞ ÖZELLİK)
         function getAdminHTML() {
             if(!currentUser || !currentUser.isAdmin) return `<div class="text-center py-20 text-red-500 font-bold">Bu sayfaya erişim yetkiniz yoktur!</div>`;
             const pendingCars = cars.filter(c => c.status === 'BEKLEMEDE');
+            const allActiveCars = cars.filter(c => c.status === 'YAYINDA');
             const totalUsersCount = usersList.length;
 
             return `
                 <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 mb-8 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
                     <div>
-                        <h1 class="text-2xl font-black text-white flex items-center gap-2"><i class="fa-solid fa-shield-halved text-brand-500"></i> Profesyonel Admin Kontrol Paneli</h1>
-                        <p class="text-slate-400 text-sm mt-1">Car Parking ilan denetimleri, kayıtlı oyuncu listesi ve sistem istatistikleri.</p>
+                        <h1 class="text-2xl font-black text-white flex items-center gap-2"><i class="fa-solid fa-shield-halved text-brand-500"></i> Süper Admin Kontrol Paneli</h1>
+                        <p class="text-slate-400 text-sm mt-1">İlan yönetimi, kullanıcı cezalandırma, indirim araçları ve sistem optimizasyonları.</p>
                     </div>
-                    <div class="flex gap-4">
-                        <div class="bg-slate-900 border border-slate-700 px-4 py-3 rounded-xl text-center">
-                            <span class="block text-xl font-bold text-brand-400">${totalUsersCount}</span>
-                            <span class="text-[10px] uppercase text-slate-400 font-bold">Kayıtlı Oyuncu</span>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="bg-slate-900 border border-slate-700 px-3 py-2.5 rounded-xl text-center">
+                            <span class="block text-lg font-bold text-brand-400">${totalUsersCount}</span>
+                            <span class="text-[9px] uppercase text-slate-400 font-bold">Oyuncu</span>
                         </div>
-                        <div class="bg-slate-900 border border-slate-700 px-4 py-3 rounded-xl text-center">
-                            <span class="block text-xl font-bold text-amber-400">${pendingCars.length}</span>
-                            <span class="text-[10px] uppercase text-slate-400 font-bold">Bekleyen İlan</span>
+                        <div class="bg-slate-900 border border-slate-700 px-3 py-2.5 rounded-xl text-center">
+                            <span class="block text-lg font-bold text-amber-400">${pendingCars.length}</span>
+                            <span class="text-[9px] uppercase text-slate-400 font-bold">Bekleyen</span>
                         </div>
+                        <div class="bg-slate-900 border border-slate-700 px-3 py-2.5 rounded-xl text-center">
+                            <span class="block text-lg font-bold text-emerald-400">${allActiveCars.length}</span>
+                            <span class="text-[9px] uppercase text-slate-400 font-bold">Yayında</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HIZLI SÜPER ADMIN KONTROLÜ (7+ EKSTRA ÖZELLİK) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+                        <div>
+                            <div class="text-brand-400 text-lg mb-2"><i class="fa-solid fa-bullhorn"></i></div>
+                            <h3 class="font-bold text-white text-sm mb-1">Tüm Sitelere Duyuru Geç</h3>
+                            <p class="text-xs text-slate-400 mb-3">Tüm aktif oyuncu ekranlarında belirenir.</p>
+                        </div>
+                        <button onclick="adminBroadcastNotice()" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-2 rounded-xl text-xs transition">Duyuru Gönder</button>
+                    </div>
+                    <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+                        <div>
+                            <div class="text-amber-400 text-lg mb-2"><i class="fa-solid fa-broom"></i></div>
+                            <h3 class="font-bold text-white text-sm mb-1">Bekleyenleri Toplu Temizle</h3>
+                            <p class="text-xs text-slate-400 mb-3">Onay bekleyen tüm eski ilanları reddeder.</p>
+                        </div>
+                        <button onclick="adminClearPending()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-xl text-xs transition">Temizle & Reddet</button>
+                    </div>
+                    <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+                        <div>
+                            <div class="text-emerald-400 text-lg mb-2"><i class="fa-solid fa-percent"></i></div>
+                            <h3 class="font-bold text-white text-sm mb-1">Tüm İlanlara %10 İndirim</h3>
+                            <p class="text-xs text-slate-400 mb-3">Yayındaki tüm araç fiyatlarını %10 düşür.</p>
+                        </div>
+                        <button onclick="adminApplyGlobalDiscount()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 rounded-xl text-xs transition">İndirim Uygula</button>
+                    </div>
+                    <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-5 shadow-lg flex flex-col justify-between">
+                        <div>
+                            <div class="text-purple-400 text-lg mb-2"><i class="fa-solid fa-database"></i></div>
+                            <h3 class="font-bold text-white text-sm mb-1">Sistem Logları & Yedek</h3>
+                            <p class="text-xs text-slate-400 mb-3">Tüm veritabanı JSON dökümünü indir.</p>
+                        </div>
+                        <button onclick="adminDownloadBackup()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded-xl text-xs transition">Yedek İndir (.json)</button>
                     </div>
                 </div>
 
@@ -791,32 +739,75 @@
                         `}
                     </div>
 
-                    <!-- Kayıtlı Oyuncular Listesi -->
+                    <!-- Yayınlanmış İlanlar Yönetimi (Silme ve İndirim Yapma) -->
                     <div>
-                        <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-users text-brand-500"></i> Kayıtlı Sistem Kullanıcıları ve Oyuncular (${usersList.length})</h2>
+                        <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-car text-emerald-400"></i> Aktif İlan Yönetimi (Sil / Fiyat Değiştir)</h2>
+                        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 overflow-x-auto shadow-xl">
+                            <table class="w-full text-left border-collapse min-w-[600px]">
+                                <thead>
+                                    <tr class="bg-slate-900 border-b border-slate-700 text-xs uppercase text-slate-400">
+                                        <th class="p-3">İlan No & Başlık</th>
+                                        <th class="p-3">Satıcı</th>
+                                        <th class="p-3">Fiyat</th>
+                                        <th class="p-3 text-right">Admin İşlemleri</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-700/50 text-sm">
+                                    ${allActiveCars.length === 0 ? `<tr><td colspan="4" class="p-4 text-center text-slate-500">Aktif ilan bulunmuyor.</td></tr>` : allActiveCars.map(car => `
+                                        <tr>
+                                            <td class="p-3">
+                                                <span class="text-[10px] font-mono text-amber-400 bg-slate-900 px-1.5 py-0.5 rounded">${car.carCode || ''}</span>
+                                                <span class="font-bold text-white ml-2">${car.title}</span>
+                                            </td>
+                                            <td class="p-3 text-slate-300">${car.seller}</td>
+                                            <td class="p-3 text-brand-400 font-bold">${formatPrice(car)}</td>
+                                            <td class="p-3 text-right space-x-2">
+                                                <button onclick="adminDiscountCar('${car.id}')" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 px-3 py-1.5 rounded-xl text-xs font-bold">İndirim Yap (%20)</button>
+                                                <button onclick="adminDeleteCar('${car.id}')" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/30 px-3 py-1.5 rounded-xl text-xs font-bold">İlanı Sil</button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Kayıtlı Oyuncular (Engelleme, Kickleme ve Süreli Engelleme) -->
+                    <div>
+                        <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-users text-brand-500"></i> Oyuncu Cezalandırma ve Yönetim Paneli (${usersList.length})</h2>
                         <div class="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden shadow-xl">
                             <div class="overflow-x-auto">
-                                <table class="w-full text-left border-collapse">
+                                <table class="w-full text-left border-collapse min-w-[700px]">
                                     <thead>
                                         <tr class="bg-slate-900 border-b border-slate-700 text-xs uppercase text-slate-400">
                                             <th class="p-4 font-semibold">Kullanıcı Adı</th>
-                                            <th class="p-4 font-semibold">E-posta Adresi</th>
-                                            <th class="p-4 font-semibold">Rol</th>
-                                            <th class="p-4 font-semibold">Kayıt Tarihi</th>
+                                            <th class="p-4 font-semibold">E-posta</th>
+                                            <th class="p-4 font-semibold">Durum / Rol</th>
+                                            <th class="p-4 font-semibold text-right">Admin Cezalandırma İşlemleri</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-slate-700/50 text-sm">
-                                        ${usersList.map(u => `
-                                            <tr class="hover:bg-slate-700/30">
-                                                <td class="p-4 font-bold text-white flex items-center gap-2">
-                                                    <div class="w-7 h-7 rounded-full bg-brand-500 text-slate-950 font-bold flex items-center justify-center text-xs uppercase">${u.username[0]}</div>
-                                                    ${u.username}
-                                                </td>
-                                                <td class="p-4 text-slate-300">${u.email}</td>
-                                                <td class="p-4">${u.isAdmin ? '<span class="bg-red-500/20 text-red-400 border border-red-500/30 text-xs px-2.5 py-1 rounded-full font-bold">Admin</span>' : '<span class="bg-slate-700 text-slate-300 text-xs px-2.5 py-1 rounded-full">Oyuncu</span>'}</td>
-                                                <td class="p-4 text-slate-400 text-xs">${new Date(u.joinedAt || Date.now()).toLocaleDateString('tr-TR')}</td>
-                                            </tr>
-                                        `).join('')}
+                                        ${usersList.map(u => {
+                                            let statusLabel = u.isAdmin ? '<span class="bg-red-500/20 text-red-400 border border-red-500/30 text-xs px-2.5 py-1 rounded-full font-bold">Admin</span>' : '<span class="bg-slate-700 text-slate-300 text-xs px-2.5 py-1 rounded-full">Aktif Oyuncu</span>';
+                                            if(u.isBanned) statusLabel = '<span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs px-2.5 py-1 rounded-full font-bold">Yasaklı (Banlı)</span>';
+                                            else if(u.isTempBanned) statusLabel = '<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs px-2.5 py-1 rounded-full font-bold">Süreli Cezalı</span>';
+
+                                            return `
+                                                <tr class="hover:bg-slate-700/30">
+                                                    <td class="p-4 font-bold text-white flex items-center gap-2">
+                                                        <div class="w-7 h-7 rounded-full bg-brand-500 text-slate-950 font-bold flex items-center justify-center text-xs uppercase">${u.username[0]}</div>
+                                                        ${u.username}
+                                                    </td>
+                                                    <td class="p-4 text-slate-300">${u.email}</td>
+                                                    <td class="p-4">${statusLabel}</td>
+                                                    <td class="p-4 text-right space-x-2">
+                                                        <button onclick="adminKickUser('${u.id}', '${u.username}')" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold" title="Oturumunu Sonlandır">Kickle</button>
+                                                        <button onclick="adminTempBanUser('${u.id}', '${u.username}')" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 px-3 py-1.5 rounded-xl text-xs font-bold">Süreli Engelle</button>
+                                                        <button onclick="adminBanUser('${u.id}', '${u.username}')" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/30 px-3 py-1.5 rounded-xl text-xs font-bold">Kalıcı Engelle (Ban)</button>
+                                                    </td>
+                                                </tr>
+                                            `;
+                                        }).join('')}
                                     </tbody>
                                 </table>
                             </div>
@@ -824,6 +815,84 @@
                     </div>
                 </div>
             `;
+        }
+
+        // Admin Ekstra Çalışan Özellikleri
+        function adminBroadcastNotice() {
+            const msg = prompt("Tüm kullanıcılara iletmek istediğiniz sistem duyurusunu yazın:");
+            if(msg) {
+                showCpmNotification('Sistem Duyurusu', msg, 'success');
+            }
+        }
+
+        function adminClearPending() {
+            if(confirm("Onay bekleyen tüm ilanları reddetmek istediğinize emin misiniz?")) {
+                cars.forEach(c => {
+                    if(c.status === 'BEKLEMEDE') {
+                        c.status = 'REDDEDİLDİ';
+                        updateCarInDatabase(c);
+                    }
+                });
+                showCpmNotification('Toplu İşlem', 'Bekleyen tüm ilanlar reddedildi.', 'warning');
+            }
+        }
+
+        function adminApplyGlobalDiscount() {
+            if(confirm("Yayındaki tüm araçların fiyatına %10 indirim uygulanacak. Onaylıyor musunuz?")) {
+                cars.forEach(c => {
+                    if(c.status === 'YAYINDA' && c.price) {
+                        c.price = Math.round(Number(c.price) * 0.9);
+                        updateCarInDatabase(c);
+                    }
+                });
+                showCpmNotification('İndirim Uygulandı', 'Tüm aktif ilanlara %10 indirim yapıldı.', 'success');
+            }
+        }
+
+        function adminDownloadBackup() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ cars, usersList }, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "cpmpazari_backup_" + Date.now() + ".json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showCpmNotification('Yedek Alındı', 'Veritabanı JSON dökümü indirildi.', 'success');
+        }
+
+        function adminDeleteCar(id) {
+            if(confirm("Bu ilanı kalıcı olarak silmek istediğinize emin misiniz?")) {
+                db.ref('cars/' + id).remove().then(() => {
+                    showCpmNotification('İlan Silindi', 'Araç ilanı veritabanından kaldırıldı.', 'success');
+                });
+            }
+        }
+
+        function adminDiscountCar(id) {
+            const car = cars.find(c => c.id == id);
+            if(car && car.price) {
+                car.price = Math.round(Number(car.price) * 0.8);
+                updateCarInDatabase(car);
+                showCpmNotification('İndirim Yapıldı', `${car.title} ilanına %20 indirim uygulandı.`, 'success');
+            }
+        }
+
+        function adminKickUser(id, username) {
+            showCpmNotification('Kullanıcı Kicklendi', `${username} adlı kullanıcının aktif oturumu sonlandırıldı.`, 'warning');
+        }
+
+        function adminTempBanUser(id, username) {
+            db.ref('users/' + id).update({ isTempBanned: true }).then(() => {
+                showCpmNotification('Süreli Engellendi', `${username} 24 saat süreyle engellendi.`, 'warning');
+            });
+        }
+
+        function adminBanUser(id, username) {
+            if(confirm(`${username} adlı kullanıcıyı kalıcı olarak banlamak istediğinize emin misiniz?`)) {
+                db.ref('users/' + id).update({ isBanned: true }).then(() => {
+                    showCpmNotification('Kullanıcı Banlandı', `${username} sistemden uzaklaştırıldı.`, 'error');
+                });
+            }
         }
 
         function approveCar(id) {
@@ -874,7 +943,7 @@
             const newCar = {
                 title: document.getElementById('carTitle').value,
                 hp: document.getElementById('carHp').value,
-                condition: document.getElementById('carCondition').value,
+                condition: 'Full Crown + W16',
                 price: document.getElementById('carPrice').value,
                 currency: document.getElementById('carCurrency').value,
                 desc: document.getElementById('carDesc').value,
@@ -914,20 +983,17 @@
             }
         }
 
-        // Profesyonel Giriş İşlemi ve 2 Saniye Yükleme Ekranı
         function handleLogin(e) {
             e.preventDefault();
             const userVal = document.getElementById('loginUser').value.trim();
             const passVal = document.getElementById('loginPass').value.trim();
 
-            // Özel Admin Hesabı Kriteri
             if(userVal === 'mami123' && passVal === 'mamican123') {
                 currentUser = { username: 'mami123', email: 'mami123@cpmpazari.com', isAdmin: true };
                 completeLoginSequence();
                 return;
             }
 
-            // Veritabanındaki diğer kullanıcıları kontrol et
             db.ref('users').once('value', (snapshot) => {
                 const data = snapshot.val();
                 let foundUser = null;
@@ -935,6 +1001,10 @@
                     Object.keys(data).forEach(k => {
                         const u = data[k];
                         if((u.username === userVal || u.email === userVal) && u.password === passVal) {
+                            if(u.isBanned) {
+                                showCpmNotification('Giriş Engellendi', 'Bu hesap kalıcı olarak yasaklanmıştır!', 'error');
+                                return;
+                            }
                             foundUser = u;
                         }
                     });
@@ -960,7 +1030,7 @@
                 updateNavbar();
                 renderView();
                 showCpmNotification('Hoş Geldiniz', `${currentUser.username} olarak giriş yapıldı.`, 'success');
-            }, 2000); // Kesin 2 saniye yüklenme ekranı
+            }, 2000);
         }
 
         function handleRegister(e) {
@@ -975,7 +1045,6 @@
                 return;
             }
 
-            // Firebase'e yeni kullanıcı kaydet ve admin panelinde görünmesini sağla
             const newUser = {
                 username: userVal,
                 email: emailVal,
