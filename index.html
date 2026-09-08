@@ -2,12 +2,17 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CPMPazari - Car Parking Multiplayer Araç İlanları</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK Entegrasyonu (Cihazlar arası anlık senkronizasyon için) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -29,10 +34,12 @@
     <style>
         html { scroll-behavior: smooth; }
         *, *::before, *::after { transition-property: color, background-color, border-color, box-shadow, opacity, transform, filter; transition-duration: 220ms; transition-timing-function: cubic-bezier(.22,.61,.36,1); }
-        button, input, select, textarea { transition-duration: 180ms; }
+        button, input, select, textarea { transition-duration: 180ms; touch-action: manipulation; }
         .soft-enter { animation: softEnter .42s cubic-bezier(.22,.61,.36,1) both; }
         @keyframes softEnter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         #photoPreview img { aspect-ratio: 16 / 10; object-fit: cover; }
+        /* Mobil Dokunma ve Scroll Düzeltmesi */
+        .modal-open { overflow: hidden; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 dark:bg-slate-900 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white transition-colors duration-300" id="pageBody">
@@ -59,9 +66,9 @@
                 </div>
             </div>
 
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-2 sm:space-x-3">
                 <!-- Dil Seçici -->
-                <select id="languageSelect" onchange="changeLanguage(this.value)" class="bg-slate-800 border border-slate-700 text-white text-xs rounded-xl px-2.5 py-2 focus:outline-none focus:border-brand-500">
+                <select id="languageSelect" onchange="changeLanguage(this.value)" class="bg-slate-800 border border-slate-700 text-white text-xs rounded-xl px-2 py-2 focus:outline-none focus:border-brand-500">
                     <option value="tr">🇹🇷 Türkçe</option>
                     <option value="en">🇬🇧 English</option>
                     <option value="de">🇩🇪 Deutsch</option>
@@ -89,8 +96,8 @@
                     <i class="fa-solid fa-sun text-sm"></i>
                 </button>
 
-                <div class="flex items-center space-x-4" id="navAuthArea">
-                    <!-- Dinamik olarak dolacak -->
+                <div class="flex items-center space-x-2 sm:space-x-4" id="navAuthArea">
+                    <!-- Dinamik dolacak -->
                 </div>
             </div>
         </div>
@@ -155,25 +162,25 @@
         </div>
     </div>
 
-    <!-- İlan Ekleme Modal -->
-    <div id="addCarModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl p-6 shadow-2xl relative my-8">
-            <button onclick="closeAddCarModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    <!-- İlan Ekleme Modal (Mobilde Dokunma & Tıklama Sorunları Tamamen Düzeltildi) -->
+    <div id="addCarModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl p-5 sm:p-6 shadow-2xl relative my-auto">
+            <button type="button" onclick="closeAddCarModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 z-10"><i class="fa-solid fa-xmark text-xl"></i></button>
             <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-car text-brand-500"></i> <span data-i18n="addCarModalTitle">Car Parking Araç İlanı Ver</span></h2>
             
             <form id="addCarForm" onsubmit="handleAddNewCar(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">İlan Başlığı</label>
-                    <input type="text" id="carTitle" required placeholder="Örn: Full Crown Şahin / Temiz Araç" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white">
+                    <input type="text" id="carTitle" required placeholder="Örn: Full Crown Şahin / Temiz Araç" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Motor Gücü (HP)</label>
-                        <input type="number" id="carHp" min="0" required placeholder="1695" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white">
+                        <input type="number" id="carHp" min="0" required placeholder="1695" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Modifiye / Tuning Durumu</label>
-                        <select id="carCondition" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white">
+                        <select id="carCondition" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
                             <option value="Full Crown + W16">Full Crown + W16 (Full+Full)</option>
                             <option value="Drift Spec (Ayarlı)">Drift Spec (Ayarlı)</option>
                             <option value="Drag Spec (1695 HP)">Drag Spec (1695 HP)</option>
@@ -184,11 +191,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Fiyat</label>
-                        <input type="number" id="carPrice" min="0" required placeholder="50000000" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white">
+                        <input type="number" id="carPrice" min="0" required placeholder="50000000" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Ödeme Birimi</label>
-                        <select id="carCurrency" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white">
+                        <select id="carCurrency" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500">
                             <option value="coin">🪙 Coin</option>
                             <option value="tl">₺ TL</option>
                             <option value="gold">🥇 Altın</option>
@@ -198,29 +205,44 @@
                 <div>
                     <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Araç Görselleri</label>
                     <input type="file" id="carPhotoFiles" accept="image/*" multiple class="hidden" onchange="handlePhotoSelection(event)">
-                    <button type="button" onclick="document.getElementById('carPhotoFiles').click()" class="w-full border border-dashed border-brand-500/40 bg-brand-500/5 hover:bg-brand-500/10 text-brand-400 font-bold py-4 rounded-xl transition flex flex-col items-center justify-center gap-2">
+                    <button type="button" onclick="document.getElementById('carPhotoFiles').click()" class="w-full border border-dashed border-brand-500/40 bg-brand-500/5 hover:bg-brand-500/10 text-brand-400 font-bold py-4 rounded-xl transition flex flex-col items-center justify-center gap-2 active:scale-95">
                         <i class="fa-solid fa-images text-xl"></i>
                         <span>Galeriden Görsel Seç</span>
-                        <span class="text-[10px] text-slate-500 font-normal">Birden fazla fotoğraf seçebilirsin</span>
+                        <span class="text-[10px] text-slate-500 font-normal">Birden fazla fotoğraf seçebilirsiniz</span>
                     </button>
                     <div id="photoPreview" class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3"></div>
                     <p id="photoCountText" class="text-[10px] text-slate-500 mt-1">Henüz görsel seçilmedi.</p>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Açıklama & Vinyl / Setup Bilgisi</label>
-                    <textarea id="carDesc" rows="3" required placeholder="Araç hakkında detayları yaz..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-white"></textarea>
+                    <textarea id="carDesc" rows="3" required placeholder="Araç hakkında detayları yaz..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500"></textarea>
                 </div>
                 <div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl text-amber-400 text-xs flex items-center gap-2">
                     <i class="fa-solid fa-triangle-exclamation text-base"></i>
-                    <span>İlanınız gönderildikten sonra yönetici onayından geçtikten sonra yayına alınacaktır.</span>
+                    <span>İlanınız yönetici onayından geçtikten sonra tüm cihazlarda (PC ve Mobil) anında görünecektir.</span>
                 </div>
-                <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-brand-500/20">İlanı Onaya Gönder</button>
+                <button type="submit" id="submitCarBtn" class="w-full bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-slate-950 font-black py-4 rounded-xl transition shadow-lg shadow-brand-500/20 cursor-pointer text-base uppercase tracking-wider relative z-20">İlanı Onaya Gönder</button>
             </form>
         </div>
     </div>
 
     <!-- JAVASCRIPT MOTORU -->
     <script>
+        // -------------------------------------------------------------
+        // FIREBASE ENTEGRASYONU (Cihazlar Arası Anlık İlan Senkronizasyonu)
+        // -------------------------------------------------------------
+        const firebaseConfig = {
+            databaseURL: "https://cpmpazari-default-rtdb.firebaseio.com" // Ortak Veritabanı Adresi
+        };
+        
+        let db = null;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+        } catch(e) {
+            console.warn("Firebase bağlantısı kurulamadı, yerel depolamaya geçiliyor:", e);
+        }
+
         const TRANSLATIONS = {
             tr: {
                 navSubTitle: "Car Parking Multiplayer Pazar",
@@ -274,12 +296,8 @@
             }
         };
 
-        let currentUser = JSON.parse(localStorage.getItem('cpm_current_user')) || { username: 'Admin', email: 'admin@cpmpazari.com', isAdmin: true, joinDate: '01.01.2026' };
-        let cars = JSON.parse(localStorage.getItem('cpm_cars')) || [];
-        let users = JSON.parse(localStorage.getItem('cpm_users')) || [
-            { username: 'Admin', email: 'admin@cpmpazari.com', isAdmin: true, isBanned: false },
-            { username: 'Oyuncu1', email: 'oyuncu1@gmail.com', isAdmin: false, isBanned: false }
-        ];
+        let currentUser = JSON.parse(localStorage.getItem('cpm_current_user')) || { username: 'Admin', email: 'admin@cpmpazari.com', isAdmin: true };
+        let cars = [];
         let uploadedPhotos = [];
         let currentView = 'home';
         let selectedCarId = null;
@@ -290,8 +308,27 @@
             document.getElementById('languageSelect').value = currentLang;
             applyTheme(currentTheme);
             updateNavbar();
-            renderView();
+            listenToDatabase();
         };
+
+        // Veritabanını Anlık Dinle (Mobilde Yüklenen İlan PC'ye Sayfa Yenilenmeden Düşer)
+        function listenToDatabase() {
+            if (db) {
+                db.ref('cars').on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        cars = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+                    } else {
+                        cars = [];
+                    }
+                    localStorage.setItem('cpm_cars', JSON.stringify(cars));
+                    renderView();
+                });
+            } else {
+                cars = JSON.parse(localStorage.getItem('cpm_cars')) || [];
+                renderView();
+            }
+        }
 
         function toggleTheme() {
             currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -323,34 +360,46 @@
             return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS['tr'][key] || key;
         }
 
-        function saveData() {
-            localStorage.setItem('cpm_cars', JSON.stringify(cars));
-            localStorage.setItem('cpm_users', JSON.stringify(users));
-            localStorage.setItem('cpm_current_user', JSON.stringify(currentUser));
+        function saveCarToDatabase(carObj) {
+            if (db) {
+                db.ref('cars/' + carObj.id).set(carObj);
+            } else {
+                cars.unshift(carObj);
+                localStorage.setItem('cpm_cars', JSON.stringify(cars));
+                renderView();
+            }
+        }
+
+        function updateCarInDatabase(carObj) {
+            if (db) {
+                db.ref('cars/' + carObj.id).update(carObj);
+            } else {
+                localStorage.setItem('cpm_cars', JSON.stringify(cars));
+                renderView();
+            }
         }
 
         function updateNavbar() {
             const area = document.getElementById('navAuthArea');
             if(currentUser) {
-                let adminBadge = currentUser.isAdmin ? `<span class="bg-red-500/20 text-red-400 border border-red-500/30 text-xs px-2 py-0.5 rounded-full font-bold">Admin</span>` : '';
+                let adminBadge = currentUser.isAdmin ? `<span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-bold">Admin</span>` : '';
                 area.innerHTML = `
-                    <button onclick="openAddCarModal()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 px-4 py-2 rounded-xl font-bold text-sm transition flex items-center gap-2 shadow-lg shadow-brand-500/20">
-                        <i class="fa-solid fa-plus"></i> <span>İlan Ver</span>
+                    <button onclick="openAddCarModal()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 px-3 sm:px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-1.5 shadow-lg shadow-brand-500/20 active:scale-95">
+                        <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">İlan Ver</span>
                     </button>
-                    <div class="flex items-center gap-3 bg-slate-800/80 border border-slate-700/50 py-1.5 px-3 rounded-xl cursor-pointer" onclick="changeView('profile')">
-                        <div class="w-8 h-8 rounded-full bg-brand-500 text-slate-950 font-bold flex items-center justify-center uppercase">${currentUser.username[0]}</div>
+                    <div class="flex items-center gap-2 bg-slate-800/80 border border-slate-700/50 py-1.5 px-2.5 rounded-xl cursor-pointer" onclick="changeView('profile')">
+                        <div class="w-7 h-7 rounded-full bg-brand-500 text-slate-950 font-bold flex items-center justify-center uppercase text-xs">${currentUser.username[0]}</div>
                         <div class="text-left hidden sm:block">
                             <div class="text-xs font-bold text-white flex items-center gap-1">${currentUser.username} ${adminBadge}</div>
-                            <div class="text-[10px] text-slate-400">Profil</div>
                         </div>
                     </div>
-                    ${currentUser.isAdmin ? `<button onclick="changeView('admin')" class="bg-slate-800 hover:bg-slate-700 text-brand-400 p-2.5 rounded-xl border border-brand-500/30" title="Admin Paneli"><i class="fa-solid fa-shield-halved"></i></button>` : ''}
-                    <button onclick="handleLogout()" class="text-slate-400 hover:text-red-400 p-2"><i class="fa-solid fa-right-from-bracket text-lg"></i></button>
+                    ${currentUser.isAdmin ? `<button onclick="changeView('admin')" class="bg-slate-800 hover:bg-slate-700 text-brand-400 p-2 rounded-xl border border-brand-500/30" title="Admin Paneli"><i class="fa-solid fa-shield-halved text-sm"></i></button>` : ''}
+                    <button onclick="handleLogout()" class="text-slate-400 hover:text-red-400 p-1.5"><i class="fa-solid fa-right-from-bracket text-base"></i></button>
                 `;
             } else {
                 area.innerHTML = `
-                    <button onclick="openAuthModal()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 px-5 py-2.5 rounded-xl font-bold text-sm transition shadow-lg shadow-brand-500/20">
-                        Giriş Yap / Kayıt Ol
+                    <button onclick="openAuthModal()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition shadow-lg shadow-brand-500/20">
+                        Giriş Yap
                     </button>
                 `;
             }
@@ -387,9 +436,9 @@
         function getHomeHTML() {
             const activeCars = cars.filter(c => c.status === 'YAYINDA');
             return `
-                <div class="soft-enter bg-slate-800/60 border border-slate-700/50 rounded-2xl p-6 mb-8 backdrop-blur-md shadow-xl">
-                    <h1 class="text-2xl sm:text-3xl font-black mb-2 text-white">Car Parking Pazarında Hayalindeki Arabayı Bul</h1>
-                    <p class="text-slate-400 text-sm mb-6">1695 HP araçlar, özel kaplamalı (vinyl) ve Crown'lu en gözde CPM araçlarını keşfet.</p>
+                <div class="soft-enter bg-slate-800/60 border border-slate-700/50 rounded-2xl p-4 sm:p-6 mb-8 backdrop-blur-md shadow-xl">
+                    <h1 class="text-xl sm:text-3xl font-black mb-2 text-white">Car Parking Pazarında Hayalindeki Arabayı Bul</h1>
+                    <p class="text-slate-400 text-xs sm:text-sm mb-6">1695 HP araçlar, özel kaplamalı (vinyl) ve Crown'lu en gözde CPM araçlarını keşfet.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         <input type="text" id="filterSearch" placeholder="Araç veya ilan ara..." class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
                         <select id="filterCurrency" class="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
@@ -402,11 +451,11 @@
                     </div>
                 </div>
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-car-rear text-brand-500"></i> <span>Güncel İlanlar</span></h2>
+                    <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-car-rear text-brand-500"></i> <span>Güncel İlanlar</span></h2>
                     <span class="text-xs text-slate-400 bg-slate-800 px-3 py-1 rounded-full"><span id="carCount">${activeCars.length}</span> ilan gösteriliyor</span>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="carListGrid">
-                    ${activeCars.length ? activeCars.map(car => carCardTemplate(car)).join('') : `<div class="col-span-3 text-center py-12 text-slate-500">Henüz onaylanmış veya yayında olan ilan yok.</div>`}
+                    ${activeCars.length ? activeCars.map(car => carCardTemplate(car)).join('') : `<div class="col-span-3 text-center py-12 text-slate-500">Henüz onaylanmış veya yayında olan ilan bulunmuyor.</div>`}
                 </div>
             `;
         }
@@ -414,26 +463,26 @@
         function carCardTemplate(car) {
             const photo = car.photos && car.photos.length > 0 ? car.photos[0] : 'https://via.placeholder.com/400x250?text=CPM+Arac';
             return `
-                <div class="soft-enter bg-slate-800/80 border border-slate-700/60 rounded-2xl overflow-hidden hover:border-brand-500/50 hover:-translate-y-1 transition duration-300 group flex flex-col shadow-lg">
-                    <div class="relative h-52 overflow-hidden bg-slate-900">
+                <div class="soft-enter bg-slate-800/80 border border-slate-700/60 rounded-2xl overflow-hidden hover:border-brand-500/50 transition duration-300 group flex flex-col shadow-lg">
+                    <div class="relative h-48 sm:h-52 overflow-hidden bg-slate-900">
                         <img src="${photo}" alt="${car.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         <div class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-brand-400 border border-brand-500/30">${car.condition || 'Tuning Bilgisi Yok'}</div>
                         <div class="absolute top-3 right-3 bg-slate-950/85 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-white border border-slate-700">${currencyLabel(car.currency)}</div>
-                        <div class="absolute bottom-3 right-3 bg-slate-950/90 backdrop-blur-md px-3 py-1.5 rounded-xl font-black text-brand-400 text-lg border border-slate-700 shadow-xl">${formatPrice(car)}</div>
+                        <div class="absolute bottom-3 right-3 bg-slate-950/90 backdrop-blur-md px-3 py-1.5 rounded-xl font-black text-brand-400 text-base sm:text-lg border border-slate-700 shadow-xl">${formatPrice(car)}</div>
                     </div>
-                    <div class="p-5 flex flex-col flex-grow">
+                    <div class="p-4 sm:p-5 flex flex-col flex-grow">
                         <h3 class="font-bold text-white text-base mb-3 line-clamp-2 group-hover:text-brand-400 transition">${car.title}</h3>
                         <div class="grid grid-cols-2 gap-2 py-2 border-t border-b border-slate-700/50 text-xs text-slate-300 mb-4">
                             <div><i class="fa-solid fa-bolt text-brand-500 mr-1"></i> ${car.hp || 0} HP</div>
                             <div><i class="fa-solid fa-eye text-brand-500 mr-1"></i> ${car.views || 0} görüntülenme</div>
                         </div>
                         <div class="flex items-center gap-2 mb-4">
-                            <button onclick="reactToCar(${car.id}, 'like')" class="flex-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-xl py-2 text-xs font-bold transition"><i class="fa-regular fa-thumbs-up mr-1"></i> ${car.likes || 0}</button>
-                            <button onclick="reactToCar(${car.id}, 'dislike')" class="flex-1 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-xl py-2 text-xs font-bold transition"><i class="fa-regular fa-thumbs-down mr-1"></i> ${car.dislikes || 0}</button>
+                            <button onclick="reactToCar('${car.id}', 'like')" class="flex-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-xl py-2 text-xs font-bold transition"><i class="fa-regular fa-thumbs-up mr-1"></i> ${car.likes || 0}</button>
+                            <button onclick="reactToCar('${car.id}', 'dislike')" class="flex-1 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-xl py-2 text-xs font-bold transition"><i class="fa-regular fa-thumbs-down mr-1"></i> ${car.dislikes || 0}</button>
                         </div>
                         <div class="mt-auto flex items-center justify-between pt-2">
                             <span class="text-[11px] text-slate-500 flex items-center gap-1"><i class="fa-regular fa-user"></i> ${car.seller}</span>
-                            <button onclick="changeView('detail', ${car.id})" class="bg-slate-700 hover:bg-brand-500 hover:text-slate-950 text-white text-xs font-bold px-4 py-2 rounded-xl transition">İlanı İncele</button>
+                            <button onclick="changeView('detail', '${car.id}')" class="bg-slate-700 hover:bg-brand-500 hover:text-slate-950 text-white text-xs font-bold px-4 py-2 rounded-xl transition">İlanı İncele</button>
                         </div>
                     </div>
                 </div>
@@ -454,19 +503,18 @@
         }
 
         function reactToCar(id, type) {
-            const car = cars.find(c => c.id === id);
+            const car = cars.find(c => c.id == id);
             if(!car) return;
             if(type === 'like') car.likes = (car.likes || 0) + 1;
             else car.dislikes = (car.dislikes || 0) + 1;
-            saveData();
-            renderView();
+            updateCarInDatabase(car);
         }
 
         function getDetailHTML(id) {
-            const car = cars.find(c => c.id === id);
+            const car = cars.find(c => c.id == id);
             if(!car) return `<div class="text-center py-20 text-slate-400">İlan bulunamadı. <button onclick="changeView('home')" class="text-brand-500 underline">Ana sayfaya dön</button></div>`;
             car.views = (car.views || 0) + 1;
-            saveData();
+            updateCarInDatabase(car);
             
             const firstPhoto = car.photos && car.photos.length > 0 ? car.photos[0] : 'https://via.placeholder.com/600x400?text=CPM+Arac';
 
@@ -478,12 +526,12 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2 space-y-6">
                         <div class="bg-slate-800 border border-slate-700/60 rounded-2xl overflow-hidden p-2 shadow-xl">
-                            <div class="h-96 rounded-xl overflow-hidden bg-slate-900 mb-2">
+                            <div class="h-64 sm:h-96 rounded-xl overflow-hidden bg-slate-900 mb-2">
                                 <img id="mainDetailPhoto" src="${firstPhoto}" class="w-full h-full object-cover">
                             </div>
                             <div class="grid grid-cols-4 gap-2">
                                 ${(car.photos || []).map((p) => `
-                                    <div onclick="document.getElementById('mainDetailPhoto').src='${p}'" class="h-20 rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-brand-500 transition">
+                                    <div onclick="document.getElementById('mainDetailPhoto').src='${p}'" class="h-16 sm:h-20 rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-brand-500 transition">
                                         <img src="${p}" class="w-full h-full object-cover">
                                     </div>
                                 `).join('')}
@@ -500,7 +548,7 @@
                         <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 shadow-xl">
                             <span class="text-xs bg-brand-500/20 text-brand-400 px-3 py-1 rounded-full font-bold border border-brand-500/30">${car.condition}</span>
                             <h1 class="text-xl font-bold text-white mt-3 mb-2">${car.title}</h1>
-                            <div class="text-3xl font-black text-brand-400 mb-6">${formatPrice(car)}</div>
+                            <div class="text-2xl sm:text-3xl font-black text-brand-400 mb-6">${formatPrice(car)}</div>
                             <div class="space-y-3 border-t border-slate-700/60 pt-4 text-sm">
                                 <div class="flex justify-between"><span class="text-slate-400">Para Birimi:</span> <span class="font-bold text-white">${currencyLabel(car.currency)}</span></div>
                                 <div class="flex justify-between"><span class="text-slate-400">Motor Gücü:</span> <span class="font-bold text-white">${car.hp || 0} HP</span></div>
@@ -517,7 +565,7 @@
                                     <div class="text-xs text-slate-400">CPMPazari Doğrulanmış Oyuncu</div>
                                 </div>
                             </div>
-                            <button onclick="alert('Car Parking Oyuncu ID İletişim Simülasyonu: Oyuncu ID #CPM-' + Math.floor(10000 + Math.random() * 90000))" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-brand-500/20 flex items-center justify-center gap-2">
+                            <button onclick="alert('Oyuncu ID İletişim Simülasyonu: CPM-#${Math.floor(10000 + Math.random() * 90000)}')" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-brand-500/20 flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-gamepad"></i> <span>Oyuncu ile İletişime Geç (ID)</span>
                             </button>
                         </div>
@@ -533,16 +581,16 @@
             const soldCars = myCars.filter(c => c.status === 'SATILDI');
 
             return `
-                <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-8 mb-8 shadow-xl flex flex-col sm:flex-row items-center gap-6">
-                    <div class="w-24 h-24 rounded-full bg-brand-500 text-slate-950 font-black text-4xl flex items-center justify-center shadow-lg shadow-brand-500/20 uppercase">
+                <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 sm:p-8 mb-8 shadow-xl flex flex-col sm:flex-row items-center gap-6">
+                    <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-brand-500 text-slate-950 font-black text-3xl sm:text-4xl flex items-center justify-center shadow-lg shadow-brand-500/20 uppercase">
                         ${currentUser.username[0]}
                     </div>
                     <div class="text-center sm:text-left">
-                        <h1 class="text-2xl font-black text-white flex items-center gap-2 justify-center sm:justify-start">
+                        <h1 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2 justify-center sm:justify-start">
                             ${currentUser.username} 
                             ${currentUser.isAdmin ? '<span class="bg-red-500/20 text-red-400 text-xs px-2.5 py-0.5 rounded-full border border-red-500/30">Admin</span>' : ''}
                         </h1>
-                        <p class="text-slate-400 text-sm mt-1">E-posta: ${currentUser.email}</p>
+                        <p class="text-slate-400 text-xs sm:text-sm mt-1">E-posta: ${currentUser.email}</p>
                     </div>
                     <div class="sm:ml-auto flex gap-3">
                         <button onclick="openAddCarModal()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold px-5 py-3 rounded-xl shadow-lg transition">İlan Ekle</button>
@@ -551,14 +599,14 @@
 
                 <div class="space-y-8">
                     <div>
-                        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-car text-brand-500"></i> <span>Aktif / Bekleyen / Reddedilen İlanlarım</span></h2>
+                        <h2 class="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-car text-brand-500"></i> <span>Aktif / Bekleyen / Reddedilen İlanlarım</span></h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             ${activeCars.length > 0 ? activeCars.map(car => profileCarCard(car)).join('') : `<div class="text-slate-500 text-sm">Aktif ilanınız bulunmuyor.</div>`}
                         </div>
                     </div>
 
                     <div>
-                        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-500"></i> <span>Satılmış İlanlarım</span></h2>
+                        <h2 class="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-500"></i> <span>Satılmış İlanlarım</span></h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             ${soldCars.length > 0 ? soldCars.map(car => profileCarCard(car)).join('') : `<div class="text-slate-500 text-sm">Satılmış ilanınız bulunmuyor.</div>`}
                         </div>
@@ -586,17 +634,16 @@
                         <h3 class="font-bold text-white text-base mb-1">${car.title}</h3>
                         <p class="text-brand-400 font-bold mb-3">${formatPrice(car)}</p>
                     </div>
-                    ${car.status === 'YAYINDA' ? `<button onclick="markCarAsSold(${car.id})" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition">Satıldı İşaretle</button>` : ''}
+                    ${car.status === 'YAYINDA' ? `<button onclick="markCarAsSold('${car.id}')" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition">Satıldı İşaretle</button>` : ''}
                 </div>
             `;
         }
 
         function markCarAsSold(id) {
-            const car = cars.find(c => c.id === id);
+            const car = cars.find(c => c.id == id);
             if(car) {
                 car.status = 'SATILDI';
-                saveData();
-                renderView();
+                updateCarInDatabase(car);
             }
         }
 
@@ -608,7 +655,7 @@
             return `
                 <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 mb-8 shadow-xl">
                     <h1 class="text-2xl font-black text-white flex items-center gap-2"><i class="fa-solid fa-shield-halved text-brand-500"></i> Admin Paneli</h1>
-                    <p class="text-slate-400 text-sm mt-1">Gelen CPM ilanlarını onaylayın, reddedin ve tüm ekranlara yayına alın.</p>
+                    <p class="text-slate-400 text-sm mt-1">Gelen CPM ilanlarını onaylayın, reddedin ve tüm ekranlara anında yayına alın.</p>
                 </div>
 
                 <div class="space-y-8">
@@ -627,8 +674,8 @@
                                             </div>
                                         </div>
                                         <div class="flex gap-2">
-                                            <button onclick="approveCar(${car.id})" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 rounded-xl text-xs transition">Onayla & Yayına Al</button>
-                                            <button onclick="rejectCar(${car.id})" class="flex-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/30 font-bold py-2 rounded-xl text-xs transition">Reddet</button>
+                                            <button onclick="approveCar('${car.id}')" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 rounded-xl text-xs transition">Onayla & Yayına Al</button>
+                                            <button onclick="rejectCar('${car.id}')" class="flex-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/30 font-bold py-2 rounded-xl text-xs transition">Reddet</button>
                                         </div>
                                     </div>
                                 `).join('')}
@@ -640,25 +687,23 @@
         }
 
         function approveCar(id) {
-            const car = cars.find(c => c.id === id);
+            const car = cars.find(c => c.id == id);
             if(car) {
                 car.status = 'YAYINDA';
-                saveData();
-                alert('İlan onaylandı ve tüm kullanıcıların ekranına yayına alındı!');
-                renderView();
+                updateCarInDatabase(car);
+                alert('İlan onaylandı! Artık PC ve Mobil dâhil tüm cihazlarda görünüyor.');
             }
         }
 
         function rejectCar(id) {
-            const car = cars.find(c => c.id === id);
+            const car = cars.find(c => c.id == id);
             if(car) {
                 car.status = 'REDDEDİLDİ';
-                saveData();
-                renderView();
+                updateCarInDatabase(car);
             }
         }
 
-        // FOTOĞRAF VE MODAL İŞLEMLERİ
+        // FOTOĞRAF VE MODAL İŞLEMLERİ (Mobil Optimize Edildi)
         function handlePhotoSelection(event) {
             const files = event.target.files;
             if(!files || files.length === 0) return;
@@ -687,7 +732,7 @@
             }
 
             const newCar = {
-                id: Date.now(),
+                id: 'cpm_' + Date.now(),
                 title: document.getElementById('carTitle').value,
                 hp: document.getElementById('carHp').value,
                 condition: document.getElementById('carCondition').value,
@@ -702,21 +747,19 @@
                 views: 0
             };
 
-            cars.unshift(newCar);
-            saveData();
+            saveCarToDatabase(newCar);
             closeAddCarModal();
-            alert('İlanınız başarıyla gönderildi! Yönetici onayından sonra ekrana düşecektir.');
+            alert('İlanınız başarıyla gönderildi! Yönetici onayından sonra PC ve Mobilde ortak ekrana düşecektir.');
             uploadedPhotos = [];
             document.getElementById('addCarForm').reset();
             document.getElementById('photoPreview').innerHTML = '';
-            renderView();
         }
 
         // AUTH & MODAL KONTROLLERİ
-        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
-        function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
-        function openAddCarModal() { document.getElementById('addCarModal').classList.remove('hidden'); }
-        function closeAddCarModal() { document.getElementById('addCarModal').classList.add('hidden'); }
+        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); document.body.classList.add('modal-open'); }
+        function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); document.body.classList.remove('modal-open'); }
+        function openAddCarModal() { document.getElementById('addCarModal').classList.remove('hidden'); document.body.classList.add('modal-open'); }
+        function closeAddCarModal() { document.getElementById('addCarModal').classList.add('hidden'); document.body.classList.remove('modal-open'); }
 
         function switchTab(tab) {
             if(tab === 'login') {
@@ -736,7 +779,7 @@
             e.preventDefault();
             const userVal = document.getElementById('loginUser').value;
             currentUser = { username: userVal, email: `${userVal}@cpmpazari.com`, isAdmin: userVal.toLowerCase() === 'admin' };
-            saveData();
+            localStorage.setItem('cpm_current_user', JSON.stringify(currentUser));
             closeAuthModal();
             updateNavbar();
             renderView();
@@ -747,7 +790,7 @@
             const userVal = document.getElementById('regUser').value;
             const emailVal = document.getElementById('regEmail').value;
             currentUser = { username: userVal, email: emailVal, isAdmin: false };
-            saveData();
+            localStorage.setItem('cpm_current_user', JSON.stringify(currentUser));
             closeAuthModal();
             updateNavbar();
             renderView();
